@@ -1,6 +1,6 @@
 package com.carlos.charles_api.model.enums;
 
-public enum SoState {
+public enum SoStateType {
     CREATED,
     OPEN,
     CLOSED,
