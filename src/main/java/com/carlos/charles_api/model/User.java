@@ -4,6 +4,7 @@ import com.carlos.charles_api.model.enums.EntityState;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "user_tb")
 public class User {
     @Id
@@ -34,5 +36,13 @@ public class User {
         this.name = name;
         this.lastName = lastName;
         this.state = state;
+    }
+
+    public User(Long id, String userId, String name, String lastName) {
+        this.id = id;
+        this.userId = userId;
+        this.name = name;
+        this.lastName = lastName;
+        this.state = EntityState.ACTIVE;
     }
 }

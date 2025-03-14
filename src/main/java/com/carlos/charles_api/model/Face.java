@@ -5,12 +5,14 @@ import com.carlos.charles_api.model.enums.FaceRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "face_tb")
 public class Face {
     @Id
@@ -38,6 +40,14 @@ public class Face {
         this.id = id;
         this.user = user;
         this.state = state;
+        this.role = role;
+        this.workspace = workspace;
+    }
+
+    public Face(Long id, User user, FaceRole role, Workspace workspace) {
+        this.id = id;
+        this.user = user;
+        this.state = EntityState.ACTIVE;
         this.role = role;
         this.workspace = workspace;
     }
