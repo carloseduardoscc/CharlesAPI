@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -25,5 +26,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private EntityState state;
     @OneToMany(mappedBy = "user")
-    private List<Face> faces;
+    private List<Face> faces = new ArrayList<>();
+
+    public User(Long id, String userId, String name, String lastName, EntityState state) {
+        this.id = id;
+        this.userId = userId;
+        this.name = name;
+        this.lastName = lastName;
+        this.state = state;
+    }
 }

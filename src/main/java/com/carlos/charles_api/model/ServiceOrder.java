@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -30,8 +31,18 @@ public class ServiceOrder {
     @JoinColumn(name = "collaborator_id")
     private Face collaborator;
     @OneToMany
-    private List<SoState> states;
+    private List<SoState> states = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private SoStateType currentState;
 
+    public ServiceOrder(Long id, String soCode, String description, String diagnostic, Workspace workspace, Face supporter, Face collaborator, SoStateType currentState) {
+        this.id = id;
+        this.soCode = soCode;
+        this.description = description;
+        this.diagnostic = diagnostic;
+        this.workspace = workspace;
+        this.supporter = supporter;
+        this.collaborator = collaborator;
+        this.currentState = currentState;
+    }
 }

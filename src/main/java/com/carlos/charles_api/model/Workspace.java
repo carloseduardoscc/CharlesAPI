@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -18,7 +19,12 @@ public class Workspace {
 
     //External
     @OneToMany(mappedBy = "workspace")
-    private List<ServiceOrder> serviceOrders;
+    private List<ServiceOrder> serviceOrders = new ArrayList<>();
     @OneToMany(mappedBy = "workspace")
-    private List<Face> faces;
+    private List<Face> faces = new ArrayList<>();
+
+    public Workspace(Long id, String identification) {
+        this.id = id;
+        this.identification = identification;
+    }
 }
