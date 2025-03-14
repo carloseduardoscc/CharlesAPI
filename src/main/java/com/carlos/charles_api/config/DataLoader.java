@@ -55,20 +55,20 @@ public class DataLoader implements CommandLineRunner
         // Order de serviço solicitada pelo f2 com um novo estado de 'CREATED'!
         ServiceOrder so1 = soRepo.save(new ServiceOrder(null, "11-22-33-44", "Monitor do computador 27 no setor financeiro não liga", w1, f2));
         f2.getOpenSO().add(so1);
-        SoState soState1 = soStateRepo.save(new SoState(null, LocalDateTime.now(), SoStateType.CREATED, so1));
+        SoState soState1 = soStateRepo.save(new SoState(null, LocalDateTime.now(), SoStateType.OPEN, so1));
         so1.getStates().add(soState1);
 
         // f1 se responsabiliza pela so1
         so1.setSupporter(f1);
         f1.getManagedSO().add(so1);
-        SoState soState2 = soStateRepo.save(new SoState(null, LocalDateTime.now().plusMinutes(15), SoStateType.OPEN, so1));
+        SoState soState2 = soStateRepo.save(new SoState(null, LocalDateTime.now().plusMinutes(15), SoStateType.ASSIGNED, so1));
         so1.getStates().add(soState2);
-        so1.setCurrentState(SoStateType.OPEN);
+        so1.setCurrentState(SoStateType.ASSIGNED);
 
         // so1 é concluída e é deixado o diagnóstico
-        SoState soState3 = soStateRepo.save(new SoState(null, LocalDateTime.now().plusMinutes(45), SoStateType.CLOSED, so1));
+        SoState soState3 = soStateRepo.save(new SoState(null, LocalDateTime.now().plusMinutes(45), SoStateType.COMPLETED, so1));
         so1.getStates().add(soState3);
-        so1.setCurrentState(SoStateType.CLOSED);
+        so1.setCurrentState(SoStateType.COMPLETED);
         so1.setDiagnostic("Monitor com defeito foi substituído");
 
 

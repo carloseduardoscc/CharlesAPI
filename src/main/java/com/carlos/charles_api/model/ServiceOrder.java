@@ -56,7 +56,7 @@ public class ServiceOrder {
         this.workspace = workspace;
         this.supporter = supporter;
         this.collaborator = collaborator;
-        this.currentState = SoStateType.OPEN;
+        this.currentState = SoStateType.ASSIGNED;
     }
 
     public ServiceOrder(Long id, String soCode, String description, Workspace workspace, Face collaborator) {
@@ -65,6 +65,6 @@ public class ServiceOrder {
         this.description = description;
         this.workspace = workspace;
         this.collaborator = collaborator;
-        this.currentState = SoStateType.OPEN;
+        this.currentState = SoStateType.ASSIGNED;
     }
 }
