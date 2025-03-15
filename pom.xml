@@ -10,7 +10,6 @@
 	</parent>
 	<groupId>com.carlos</groupId>
 	<artifactId>charles_api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>charles_api</name>
 	<description>API backend do projeto Charles²</description>
 	<url/>
