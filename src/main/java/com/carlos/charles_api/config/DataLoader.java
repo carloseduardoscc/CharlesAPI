@@ -37,9 +37,9 @@ public class DataLoader implements CommandLineRunner
         User u3 = userRepo.save(new User(null, "@TheodoroTorres2340", "Theodoro", "Torres"));
         User u4 = userRepo.save(new User(null, "@LeonardoGuimaraes9843", "Leonardo", "Guimaraes"));
 
-        // Usuário u4 desativa sua conta
-        u4.setState(EntityState.DISABLED);
-        userRepo.save(u4);
+        // Usuário u3 desativa sua conta
+        u3.setState(EntityState.DISABLED);
+        userRepo.save(u3);
 
         // Usuário u1 criando um workspace e se torna Admin dele
         Workspace w1 = workspaceRepo.save(new Workspace(null, "NewWorkspace"));
@@ -53,7 +53,7 @@ public class DataLoader implements CommandLineRunner
         w1.getFaces().add(f2);
 
         // Order de serviço solicitada pelo f2 com um novo estado de 'CREATED'!
-        ServiceOrder so1 = soRepo.save(new ServiceOrder(null, "11-22-33-44", "Monitor do computador 27 no setor financeiro não liga", w1, f2));
+        ServiceOrder so1 = soRepo.save(new ServiceOrder(null, "SO-1A2B3C", "Monitor do computador 27 no setor financeiro não liga", w1, f2));
         f2.getOpenSO().add(so1);
         SoState soState1 = soStateRepo.save(new SoState(null, LocalDateTime.now(), SoStateType.OPEN, so1));
         so1.getStates().add(soState1);
