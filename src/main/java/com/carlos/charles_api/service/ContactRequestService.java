@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-
 @Service
 @RequiredArgsConstructor
 public class ContactRequestService {
@@ -22,20 +20,8 @@ public class ContactRequestService {
     private String supportEmail;
 
     public void send(ContactRequestDTO request) {
-
-        validateRequest(request);
         sendContactRequestEmailToSupport(request);
         sendConfirmationEmailToUser(request);
-
-    }
-
-    private void validateRequest(ContactRequestDTO requestDto) {
-        String personType = requestDto.getPersonType();
-
-        //personType: Permite apenas 'PF', 'PJ', texto vazio ou nulo
-        if (!Objects.isNull(personType) && personType.toUpperCase().equals("PF") && personType.toUpperCase().equals("PJ") && !personType.isBlank()) {
-            throw new IllegalArgumentException("Campo personType inválido, somente são aceitas strings 'PF' ou 'PJ', foi enviado: '" + requestDto.getPersonType() + "'");
-        }
     }
 
     private void sendConfirmationEmailToUser(ContactRequestDTO requestDto) {

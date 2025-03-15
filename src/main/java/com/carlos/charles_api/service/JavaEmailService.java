@@ -1,6 +1,7 @@
 package com.carlos.charles_api.service;
 
 import com.carlos.charles_api.dto.EmailDTO;
+import com.carlos.charles_api.service.exceptions.EmailException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +26,11 @@ public class JavaEmailService implements EmailService {
             helper.setFrom(emailDTO.getFrom());
             helper.setTo(emailDTO.getTo());
             helper.setSubject(emailDTO.getSubject());
-            helper.setText(emailDTO.getBody(), true); // O segundo parâmetro "true" indica que é HTML
+            helper.setText(emailDTO.getBody(), true);
 
             sender.send(message);
-        } catch (MessagingException e){
-
+        } catch (MessagingException e) {
+            throw new EmailException(e.getMessage());
         }
     }
 

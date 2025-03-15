@@ -16,7 +16,7 @@ public class ContactRequestDTO {
     @NotBlank
     private String email;
     private String city;
-    private String personType;
+    private PersonType personType;
     @NotBlank
     private String message;
 }
