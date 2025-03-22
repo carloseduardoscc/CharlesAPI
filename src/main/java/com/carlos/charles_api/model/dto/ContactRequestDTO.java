@@ -1,7 +1,6 @@
-package com.carlos.charles_api.dto;
+package com.carlos.charles_api.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.carlos.charles_api.model.enums.PersonType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

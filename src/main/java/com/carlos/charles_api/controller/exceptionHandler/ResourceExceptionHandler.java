@@ -4,21 +4,14 @@ import com.carlos.charles_api.service.exceptions.DatabaseException;
 import com.carlos.charles_api.service.exceptions.EmailException;
 import com.carlos.charles_api.service.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.io.InvalidClassException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 //TRATAMENTO GERAL DE EXCEÇÕES
 @ControllerAdvice
@@ -73,29 +66,5 @@ public class ResourceExceptionHandler {
         StandardError err = new StandardError(LocalDateTime.now(), status.value(), "Erro interno: "+e.getClass().getSimpleName(), e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
-}
-
-class ValidationError extends StandardError {
-
-    private List<FieldMessage> errors = new ArrayList<>();
-
-    public ValidationError() {
-        super();
-    }
-
-    public void addError(String fieldName, String message) {
-        errors.add(new FieldMessage(fieldName, message));
-    }
-
-    public List<FieldMessage> getErrors() {
-        return errors;
-    }
-}
-
-@Data
-@AllArgsConstructor
-class FieldMessage {
-    private String fieldName;
-    private String message;
 }
 

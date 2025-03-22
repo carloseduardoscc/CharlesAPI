@@ -1,4 +1,4 @@
-package com.carlos.charles_api.dto;
+package com.carlos.charles_api.model.enums;
 
 import lombok.AllArgsConstructor;
 

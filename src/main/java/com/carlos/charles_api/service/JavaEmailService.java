@@ -1,6 +1,6 @@
 package com.carlos.charles_api.service;
 
-import com.carlos.charles_api.dto.EmailDTO;
+import com.carlos.charles_api.model.dto.EmailDTO;
 import com.carlos.charles_api.service.exceptions.EmailException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

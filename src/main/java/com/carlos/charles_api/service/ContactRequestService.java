@@ -1,7 +1,7 @@
 package com.carlos.charles_api.service;
 
-import com.carlos.charles_api.dto.ContactRequestDTO;
-import com.carlos.charles_api.dto.EmailDTO;
+import com.carlos.charles_api.model.dto.ContactRequestDTO;
+import com.carlos.charles_api.model.dto.EmailDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
