@@ -32,10 +32,10 @@ public class DataLoader implements CommandLineRunner
         //Aviso: Regras de negócio não funcionam aqui porque não passa pela camada do service, isso é apenas para população teste de dados!
 
         // Criando usuários
-        User u1 = userRepo.save(new User(null, "@JoãoBezerra5678", "João", "Bezerra"));
-        User u2 = userRepo.save(new User(null, "@CarlosAlberto2345", "Carlos", "Alberto"));
-        User u3 = userRepo.save(new User(null, "@TheodoroTorres2340", "Theodoro", "Torres"));
-        User u4 = userRepo.save(new User(null, "@LeonardoGuimaraes9843", "Leonardo", "Guimaraes"));
+        User u1 = userRepo.save(new User(null, "joaobezerra@gmail.com", "João", "Bezerra"));
+        User u2 = userRepo.save(new User(null, "carlosalberto@gmail.com", "Carlos", "Alberto"));
+        User u3 = userRepo.save(new User(null, "theodorotorres@gmail.com", "Theodoro", "Torres"));
+        User u4 = userRepo.save(new User(null, "leonardoguimaraes@gmail.com", "Leonardo", "Guimaraes"));
 
         // Usuário u3 desativa sua conta
         u3.setState(EntityState.DISABLED);

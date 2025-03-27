@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ public class User {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String userId;
+    private String email;
     private String name;
     private String lastName;
 
@@ -30,17 +29,17 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Face> faces = new ArrayList<>();
 
-    public User(Long id, String userId, String name, String lastName, EntityState state) {
+    public User(Long id, String email, String name, String lastName, EntityState state) {
         this.id = id;
-        this.userId = userId;
+        this.email = email;
         this.name = name;
         this.lastName = lastName;
         this.state = state;
     }
 
-    public User(Long id, String userId, String name, String lastName) {
+    public User(Long id, String email, String name, String lastName) {
         this.id = id;
-        this.userId = userId;
+        this.email = email;
         this.name = name;
         this.lastName = lastName;
         this.state = EntityState.ACTIVE;
