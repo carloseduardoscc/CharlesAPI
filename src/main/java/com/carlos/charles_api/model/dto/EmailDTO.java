@@ -4,24 +4,5 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-@Data
-public class EmailDTO {
-
-    @NotBlank
-    private String owner;
-
-    @Email
-    @NotBlank
-    private String from;
-
-    @Email
-    @NotBlank
-    private String to;
-
-    @NotBlank
-    private String subject;
-
-    @NotBlank
-    private String body;
-
+public record EmailDTO(@NotBlank String owner, @Email @NotBlank String from, @Email @NotBlank String to, @NotBlank String subject, @NotBlank String body) {
 }
