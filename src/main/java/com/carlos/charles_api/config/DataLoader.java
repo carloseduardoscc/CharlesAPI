@@ -7,6 +7,7 @@ import com.carlos.charles_api.model.enums.SoStateType;
 import com.carlos.charles_api.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -26,16 +27,18 @@ public class DataLoader implements CommandLineRunner
     ServiceOrderRepository soRepo;
     @Autowired
     SoStateRepository soStateRepo;
+    @Autowired
+    PasswordEncoder encoder;
 
     @Override
     public void run(String... args) throws Exception {
         //Aviso: Regras de negócio não funcionam aqui porque não passa pela camada do service, isso é apenas para população teste de dados!
 
         // Criando usuários
-        User u1 = userRepo.save(new User(null, "joaobezerra@gmail.com", "João", "Bezerra"));
-        User u2 = userRepo.save(new User(null, "carlosalberto@gmail.com", "Carlos", "Alberto"));
-        User u3 = userRepo.save(new User(null, "theodorotorres@gmail.com", "Theodoro", "Torres"));
-        User u4 = userRepo.save(new User(null, "leonardoguimaraes@gmail.com", "Leonardo", "Guimaraes"));
+        User u1 = userRepo.save(new User("joaobezerra@gmail.com",encoder.encode("12345"), "João", "Bezerra"));
+        User u2 = userRepo.save(new User("carlosalberto@gmail.com",encoder.encode("abcde"), "Carlos", "Alberto"));
+        User u3 = userRepo.save(new User("theodorotorres@gmail.com",encoder.encode("a1b2c3"), "Theodoro", "Torres"));
+        User u4 = userRepo.save(new User("leonardoguimaraes@gmail.com",encoder.encode("f1g2h3"), "Leonardo", "Guimaraes"));
 
         // Usuário u3 desativa sua conta
         u3.setState(EntityState.DISABLED);
