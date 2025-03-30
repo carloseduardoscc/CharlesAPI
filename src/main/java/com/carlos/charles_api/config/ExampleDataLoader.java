@@ -50,10 +50,21 @@ public class ExampleDataLoader implements CommandLineRunner
         u1.getFaces().add(f1);
         w1.getFaces().add(f1);
 
+        // Usuário u4 criando um workspace e se torna Admin dele
+        Workspace w2 = workspaceRepo.save(new Workspace(null, "NewWorkspace2"));
+        Face f4 = faceRepo.save(new Face(null, u4, FaceRole.ADMIN, w2));
+        u4.getFaces().add(f4);
+        w2.getFaces().add(f4);
+
         // Usuário u2 se tornando Collaborator do workspace w1
         Face f2 = faceRepo.save(new Face(null, u2, FaceRole.COLLABORATOR, w1));
         u2.getFaces().add(f2);
         w1.getFaces().add(f2);
+
+        // Usuário u2 se tornando Supporter do workspace w2
+        Face f2_2 = faceRepo.save(new Face(null, u2, FaceRole.SUPPORTER, w2));
+        u2.getFaces().add(f2_2);
+        w2.getFaces().add(f2_2);
 
         // Order de serviço solicitada pelo f2 com um novo estado de 'CREATED'!
         ServiceOrder so1 = soRepo.save(new ServiceOrder(null, "SO-1A2B3C", "Monitor do computador 27 no setor financeiro não liga", w1, f2));
