@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Component
-public class DataLoader implements CommandLineRunner
+public class ExampleDataLoader implements CommandLineRunner
 {
 
     @Autowired
