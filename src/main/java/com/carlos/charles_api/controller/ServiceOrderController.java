@@ -20,7 +20,7 @@ public class ServiceOrderController {
 
     @PostMapping("/open")
     public ResponseEntity open(@RequestBody @Valid OpenServiceOrderRequestDTO so){
-        return ResponseEntity.ok("Chamado aberto no workspace id="+workspaceId+" \nService order:\n"+so);
+        return ResponseEntity.ok("SERVIÇO DE TESTE:\nChamado aberto no workspace id="+workspaceId+" \nService order:\n"+so);
     }
 
 }

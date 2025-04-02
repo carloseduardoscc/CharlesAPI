@@ -1,8 +1,10 @@
 package com.carlos.charles_api.controller.exceptionHandler;
 
+import com.carlos.charles_api.model.User;
 import com.carlos.charles_api.service.exceptions.DatabaseException;
 import com.carlos.charles_api.service.exceptions.EmailException;
 import com.carlos.charles_api.service.exceptions.ResourceNotFoundException;
+import com.carlos.charles_api.service.exceptions.UserAlreadyExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<StandardError> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
-        StandardError err = new StandardError(LocalDateTime.now(), status.value(), "Recurso não encontrado", e.getMessage(), request.getRequestURI());
+        StandardError err = new StandardError(status.value(), "Recurso não encontrado", e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 
@@ -32,18 +34,25 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<StandardError> authenticationException(AuthenticationException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
-        StandardError err = new StandardError(LocalDateTime.now(), status.value(), "Problema com autenticação", e.getMessage(), request.getRequestURI());
+        StandardError err = new StandardError(status.value(), "Problema com autenticação", e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 
-    //todo Fazer o possível para ao invés de retornar os 403 vazios, mapear a exceção para cá
-
     // AUTORIZAÇÃO
     @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<StandardError> accessDeniedException(AccessDeniedException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.FORBIDDEN;
-        StandardError err = new StandardError(LocalDateTime.now(), status.value(), "Acesso negado", e.getMessage(), request.getRequestURI());
+        String username = request.getUserPrincipal().getName();
+        String message = "usuário "+username+" não tem permissão para acessar o seguinte recurso: "+request.getRequestURI();
+        StandardError err = new StandardError(status.value(), "Acesso negado", message, request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    //CADASTRO DE USUÁRIO JÁ EXISTENTE
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<StandardError> userAlreadyExistsException(UserAlreadyExistsException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        StandardError err = new StandardError(status.value(), "Usuário já cadastrado", e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 
@@ -51,7 +60,7 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<StandardError> database(DatabaseException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        StandardError err = new StandardError(LocalDateTime.now(), status.value(), "Erro de banco de dados", e.getMessage(), request.getRequestURI());
+        StandardError err = new StandardError(status.value(), "Erro de banco de dados", e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 
@@ -59,7 +68,7 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(EmailException.class)
     public ResponseEntity<StandardError> database(EmailException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        StandardError err = new StandardError(LocalDateTime.now(), status.value(), "Erro de e-mail", e.getMessage(), request.getRequestURI());
+        StandardError err = new StandardError(status.value(), "Erro de e-mail", e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 
@@ -68,7 +77,6 @@ public class ResourceExceptionHandler {
     public ResponseEntity<ValidationError> handleValidationExceptions(MethodArgumentNotValidException e, HttpServletRequest request) {
 
         ValidationError err = new ValidationError();
-        err.setTimeStamp(LocalDateTime.now());
         err.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
         err.setError("Erro de validação");
         err.setMessage("Um ou mais campos estão inválidos");
@@ -85,7 +93,7 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<StandardError> genericException(Exception e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        StandardError err = new StandardError(LocalDateTime.now(), status.value(), "Erro interno: "+e.getClass().getSimpleName(), e.getMessage(), request.getRequestURI());
+        StandardError err = new StandardError(status.value(), "Erro interno: "+e.getClass().getSimpleName(), e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 }

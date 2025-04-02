@@ -2,6 +2,8 @@ package com.carlos.charles_api.security;
 
 import com.carlos.charles_api.controller.exceptionHandler.ResourceExceptionHandler;
 import com.carlos.charles_api.model.enums.FaceRole;
+import com.carlos.charles_api.security.exceptions.CustomAccessDeniedHandler;
+import com.carlos.charles_api.security.exceptions.CustomAuthenticationEntryPoint;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +37,11 @@ import java.io.PrintWriter;
 public class SecurityConfigurations {
 
     @Autowired
+    CustomAccessDeniedHandler accessDeniedHandler;
+    @Autowired
+    CustomAuthenticationEntryPoint authenticationEntryPoint;
+
+    @Autowired
     ResourceExceptionHandler excHandler;
 
     @Autowired
@@ -60,8 +67,13 @@ public class SecurityConfigurations {
                             .requestMatchers(HttpMethod.POST, "/workspace/{workspaceId}/serviceorder/open").hasRole(FaceRole.COLLABORATOR.toString())
                             .anyRequest().authenticated()
                     )
-                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) //autentica o usuário
-                    .addFilterBefore(roleAuthorizationFilter, UsernamePasswordAuthenticationFilter.class) //verifica autorização por roles
+                    // Mapeia as exceções de autenticação e autorização do security para as classes customizadas que usam o ResourceExceptionHandler
+                    .exceptionHandling(ex -> ex
+                            .accessDeniedHandler(accessDeniedHandler)
+                            .authenticationEntryPoint(authenticationEntryPoint)
+                    )
+                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) //filtro de autenticação do usuário
+                    .addFilterBefore(roleAuthorizationFilter, UsernamePasswordAuthenticationFilter.class) //filtro que verifica autorização por roles
                     .build();
 //        } catch (AccessDeniedException e) {
 //            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
