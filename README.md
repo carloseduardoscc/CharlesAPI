@@ -8,7 +8,7 @@ Esta é a API backend de uma plataforma de gerenciamento e abertura de chamados.
 
 ## Funcionalidades
 
-![image](https://github.com/user-attachments/assets/5ab49798-4e3f-4797-bae7-92bb55010bf7)
+![funcionalidades](https://github.com/user-attachments/assets/ae8c4556-00c3-4cf3-90b3-2dada235a8a6)
 
 ## Endpoints
 
