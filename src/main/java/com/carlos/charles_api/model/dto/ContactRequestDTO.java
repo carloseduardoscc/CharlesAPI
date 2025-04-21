@@ -5,17 +5,5 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-@Data
-public class ContactRequestDTO {
-    @NotBlank
-    private String name;
-    @NotBlank
-    private String phone;
-    @Email
-    @NotBlank
-    private String email;
-    private String city;
-    private PersonType personType;
-    @NotBlank
-    private String message;
+public record ContactRequestDTO(@NotBlank String name, @NotBlank String phone, @Email @NotBlank String email, String city, PersonType personType, @NotBlank String message) {
 }

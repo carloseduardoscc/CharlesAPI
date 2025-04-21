@@ -22,4 +22,6 @@ public class Config {
     public EmailService emailService(){
         return new JavaEmailService(javaMailSender);
     }
+
+
 }

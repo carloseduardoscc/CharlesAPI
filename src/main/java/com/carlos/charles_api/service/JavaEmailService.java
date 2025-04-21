@@ -23,10 +23,10 @@ public class JavaEmailService implements EmailService {
             MimeMessage message = sender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setFrom(emailDTO.getFrom());
-            helper.setTo(emailDTO.getTo());
-            helper.setSubject(emailDTO.getSubject());
-            helper.setText(emailDTO.getBody(), true);
+            helper.setFrom(emailDTO.from());
+            helper.setTo(emailDTO.to());
+            helper.setSubject(emailDTO.subject());
+            helper.setText(emailDTO.body(), true);
 
             sender.send(message);
         } catch (MessagingException e) {

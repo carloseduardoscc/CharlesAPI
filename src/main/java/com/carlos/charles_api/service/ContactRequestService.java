@@ -25,7 +25,6 @@ public class ContactRequestService {
     }
 
     private void sendConfirmationEmailToUser(ContactRequestDTO requestDto) {
-        EmailDTO email = new EmailDTO();
 
         String body = String.format("<html>\n" +
                 "  <body>\n" +
@@ -41,14 +40,16 @@ public class ContactRequestService {
                 "    <p>Atenciosamente,</p>\n" +
                 "    <p><strong>Equipe Charles²</strong></p>\n" +
                 "  </body>\n" +
-                "</html>\n", requestDto.getName()
+                "</html>\n", requestDto.name()
         );
 
-        email.setOwner("Charles support team");
-        email.setFrom(supportEmail);
-        email.setTo(requestDto.getEmail());
-        email.setSubject("Sua solicitação foi recebida com sucesso!");
-        email.setBody(body);
+        EmailDTO email = new EmailDTO(
+                "Charles support team",
+                supportEmail,
+                requestDto.email(),
+                "Sua solicitação foi recebida com sucesso!",
+                body
+        );
 
         service.sendEmail(email);
     }
@@ -57,20 +58,21 @@ public class ContactRequestService {
         String subject = "Novo pedido de contato recebido";
         String body = "<html><body>"
                 + "<h2>Nova Solicitação de Contato</h2>"
-                + "<p><strong>Nome:</strong> " + requestDto.getName() + "</p>"
-                + "<p><strong>Telefone:</strong> " + requestDto.getPhone() + "</p>"
-                + "<p><strong>Email:</strong> " + requestDto.getEmail() + "</p>"
-                + "<p><strong>Cidade:</strong> " + requestDto.getCity() + "</p>"
-                + "<p><strong>Tipo de Pessoa:</strong> " + requestDto.getPersonType() + "</p>"
-                + "<p><strong>Mensagem:</strong><br>" + requestDto.getMessage() + "</p>"
+                + "<p><strong>Nome:</strong> " + requestDto.name() + "</p>"
+                + "<p><strong>Telefone:</strong> " + requestDto.phone() + "</p>"
+                + "<p><strong>Email:</strong> " + requestDto.email() + "</p>"
+                + "<p><strong>Cidade:</strong> " + requestDto.city() + "</p>"
+                + "<p><strong>Tipo de Pessoa:</strong> " + requestDto.personType() + "</p>"
+                + "<p><strong>Mensagem:</strong><br>" + requestDto.message() + "</p>"
                 + "</body></html>";
 
-        EmailDTO email = new EmailDTO();
-        email.setFrom(supportEmail);
-        email.setTo(supportEmail);
-        email.setSubject(subject);
-        email.setBody(body);
-        email.setOwner("Charles API backend App");
+        EmailDTO email = new EmailDTO(
+                "Charles API backend App",
+                supportEmail,
+                supportEmail,
+                subject,
+                body
+        );
 
         service.sendEmail(email);
     }
