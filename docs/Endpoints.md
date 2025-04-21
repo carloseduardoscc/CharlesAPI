@@ -66,8 +66,8 @@ Este endpoint recebe o login e senha, valida no banco de dados e retorna um toke
 **Body**:
 ```json
 {
-    "login":"joaosilva@gmail.com",
-    "password":"123456789"
+    "login":"joaobezerra@gmail.com",
+    "password":"12345"
 }
 ```
 
