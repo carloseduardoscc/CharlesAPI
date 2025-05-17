@@ -32,6 +32,7 @@ public class ExampleDataLoader implements CommandLineRunner
 
     @Override
     public void run(String... args) throws Exception {
+        //TODO adaptar exemplo de dados para o novo contexto da aplicação incluindo owner
         //Aviso: Regras de negócio não funcionam aqui porque não passa pela camada do service, isso é apenas para população teste de dados!
 
         // Criando usuários

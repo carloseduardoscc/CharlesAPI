@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -31,6 +32,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -50,6 +52,9 @@ public class SecurityConfigurations {
     @Autowired
     RoleAuthorizationFilter roleAuthorizationFilter;
 
+    @Value("${api.security.cors.allowed_origins}")
+    String allowedOrigins;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 //        try {
@@ -58,12 +63,21 @@ public class SecurityConfigurations {
                             .frameOptions(frame -> frame.disable())
                     )
                     .csrf(csrf -> csrf.disable())
+                    // Configuração de CORS do Security, ele tem um aparte do padrão do Spring que precisa também ser configurado
+                    .cors(cors -> cors.configurationSource(request -> {
+                        var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+                        corsConfig.setAllowedOriginPatterns(List.of(allowedOrigins));
+                        corsConfig.setAllowedMethods(List.of("*"));
+                        corsConfig.setAllowedHeaders(List.of("*"));
+                        corsConfig.setAllowCredentials(true);
+                        return corsConfig;
+                    }))
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .authorizeHttpRequests(authorize -> authorize
                             .requestMatchers("/h2-console/**").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/contactRequest/send").permitAll()
+                            .requestMatchers("/auth/login").permitAll()
+                            .requestMatchers("/auth/register").permitAll()
+                            .requestMatchers("/contactRequest/send").permitAll()
                             .requestMatchers(HttpMethod.POST, "/workspace/{workspaceId}/serviceorder/open").hasRole(FaceRole.COLLABORATOR.toString())
                             .anyRequest().authenticated()
                     )
