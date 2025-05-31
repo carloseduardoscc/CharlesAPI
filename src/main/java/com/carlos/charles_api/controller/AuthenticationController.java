@@ -43,7 +43,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid RegisterDTO registerDTO){
         service.register(registerDTO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("{}");
     }
 
 

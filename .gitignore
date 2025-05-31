@@ -32,8 +32,10 @@ build/
 ### VS Code ###
 .vscode/
 
+# FRONT END
+
+/src/main/resources/static/
+
 # INFORMAÇÃO SENSÍVEL
 
 informacao_sensivel.properties
-
-/auth-api
