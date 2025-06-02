@@ -32,8 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
+
 # INFORMAÇÃO SENSÍVEL
 
 informacao_sensivel.properties
-
-/auth-api
