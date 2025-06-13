@@ -44,9 +44,6 @@ public class SecurityConfigurations {
     CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Autowired
-    ResourceExceptionHandler excHandler;
-
-    @Autowired
     JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
@@ -91,10 +88,6 @@ public class SecurityConfigurations {
                     .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) //filtro de autenticação do usuário
                     .addFilterBefore(roleAuthorizationFilter, UsernamePasswordAuthenticationFilter.class) //filtro que verifica autorização por roles
                     .build();
-//        } catch (AccessDeniedException e) {
-//            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-//            excHandler.accessDeniedException(e, request);
-//        }
     }
 
     @Bean
