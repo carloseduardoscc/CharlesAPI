@@ -1,5 +1,6 @@
 package com.carlos.charles_api.model.entity;
 
+import com.carlos.charles_api.model.dto.OpenServiceOrderRequestDTO;
 import com.carlos.charles_api.model.enums.SoStateType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -66,5 +67,10 @@ public class ServiceOrder {
         this.workspace = workspace;
         this.collaborator = collaborator;
         this.currentState = SoStateType.ASSIGNED;
+    }
+
+    public ServiceOrder(OpenServiceOrderRequestDTO dto){
+        this.currentState = SoStateType.ASSIGNED;
+        this.description = dto.description();
     }
 }

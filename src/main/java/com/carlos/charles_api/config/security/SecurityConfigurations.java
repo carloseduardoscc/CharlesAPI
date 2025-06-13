@@ -29,9 +29,6 @@ public class SecurityConfigurations {
     CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Autowired
-    ResourceExceptionHandler excHandler;
-
-    @Autowired
     JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
@@ -59,11 +56,13 @@ public class SecurityConfigurations {
                     }))
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .authorizeHttpRequests(authorize -> authorize
+                            .requestMatchers("/", "/Login.html", "/tickets-and-transfer.html", "/index.html", "/Home.html", "/call-details.html","/Cadastro.html", "/css/**", "/Images/**", "/javascript/**").permitAll()
                             .requestMatchers("/h2-console/**").permitAll()
                             .requestMatchers("/auth/login").permitAll()
                             .requestMatchers("/auth/register").permitAll()
                             .requestMatchers("/contactRequest/send").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/workspace/{workspaceId}/serviceorder/open").hasRole(FaceRole.COLLABORATOR.toString())
+                            .requestMatchers(HttpMethod.POST, "/workspace/{workspaceId}/serviceorder").hasRole(FaceRole.COLLABORATOR.toString())
+                            .requestMatchers(HttpMethod.POST, "/workspace/{workspaceId}/").hasRole(FaceRole.COLLABORATOR.toString())
                             .anyRequest().authenticated()
                     )
                     // Mapeia as exceções de autenticação e autorização do security para as classes customizadas que usam o ResourceExceptionHandler
@@ -74,10 +73,6 @@ public class SecurityConfigurations {
                     .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) //filtro de autenticação do usuário
                     .addFilterBefore(roleAuthorizationFilter, UsernamePasswordAuthenticationFilter.class) //filtro que verifica autorização por roles
                     .build();
-//        } catch (AccessDeniedException e) {
-//            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-//            excHandler.accessDeniedException(e, request);
-//        }
     }
 
     @Bean

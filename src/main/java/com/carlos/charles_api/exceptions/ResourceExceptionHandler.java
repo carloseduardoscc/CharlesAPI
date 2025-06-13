@@ -1,5 +1,10 @@
-package com.carlos.charles_api.exceptions;
+package com.carlos.charles_api.controller.exceptionHandler;
 
+import com.carlos.charles_api.model.User;
+import com.carlos.charles_api.service.exceptions.DatabaseException;
+import com.carlos.charles_api.service.exceptions.EmailException;
+import com.carlos.charles_api.service.exceptions.ResourceNotFoundException;
+import com.carlos.charles_api.service.exceptions.UserAlreadyExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +39,16 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<StandardError> accessDeniedException(AccessDeniedException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.FORBIDDEN;
+        String username = request.getUserPrincipal().getName();
+        String message = "usuário "+username+" não tem permissão para acessar o seguinte recurso: "+request.getRequestURI();
+        StandardError err = new StandardError(status.value(), "Acesso negado", message, request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    // REGRA DE NEGÓCIO
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<StandardError> BusinessRuleException(BusinessRuleException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
         String username = request.getUserPrincipal().getName();
         String message = "usuário "+username+" não tem permissão para acessar o seguinte recurso: "+request.getRequestURI();
         StandardError err = new StandardError(status.value(), "Acesso negado", message, request.getRequestURI());
