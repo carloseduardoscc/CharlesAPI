@@ -1,14 +1,11 @@
-package com.carlos.charles_api.controller.exceptionHandler;
+package com.carlos.charles_api.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor

@@ -1,9 +1,7 @@
-package com.carlos.charles_api.security.exceptions;
+package com.carlos.charles_api.config.security;
 
-import com.carlos.charles_api.controller.exceptionHandler.ResourceExceptionHandler;
-import com.carlos.charles_api.controller.exceptionHandler.StandardError;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.carlos.charles_api.exceptions.ResourceExceptionHandler;
+import com.carlos.charles_api.exceptions.StandardError;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

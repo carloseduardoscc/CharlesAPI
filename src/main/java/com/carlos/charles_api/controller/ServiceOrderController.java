@@ -1,7 +1,6 @@
 package com.carlos.charles_api.controller;
 
-import com.carlos.charles_api.model.ServiceOrder;
-import com.carlos.charles_api.model.dto.OpenServiceOrderRequestDTO;
+import com.carlos.charles_api.dto.OpenServiceOrderRequestDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;

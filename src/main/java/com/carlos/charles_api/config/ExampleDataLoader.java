@@ -1,6 +1,6 @@
 package com.carlos.charles_api.config;
 
-import com.carlos.charles_api.model.*;
+import com.carlos.charles_api.model.entity.*;
 import com.carlos.charles_api.model.enums.EntityState;
 import com.carlos.charles_api.model.enums.FaceRole;
 import com.carlos.charles_api.model.enums.SoStateType;

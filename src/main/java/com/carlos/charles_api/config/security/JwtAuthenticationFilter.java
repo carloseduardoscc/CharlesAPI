@@ -1,6 +1,7 @@
-package com.carlos.charles_api.security;
+package com.carlos.charles_api.config.security;
 
 import com.carlos.charles_api.repository.UserRepository;
+import com.carlos.charles_api.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

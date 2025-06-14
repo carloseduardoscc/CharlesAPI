@@ -1,4 +1,4 @@
-package com.carlos.charles_api.controller.exceptionHandler;
+package com.carlos.charles_api.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,11 +21,4 @@ public class ValidationError extends StandardError {
     public List<FieldMessage> getErrors() {
         return errors;
     }
-}
-
-@Data
-@AllArgsConstructor
-class FieldMessage {
-    private String fieldName;
-    private String message;
 }

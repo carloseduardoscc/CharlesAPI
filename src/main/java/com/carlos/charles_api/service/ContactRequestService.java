@@ -1,7 +1,7 @@
 package com.carlos.charles_api.service;
 
-import com.carlos.charles_api.model.dto.ContactRequestDTO;
-import com.carlos.charles_api.model.dto.EmailDTO;
+import com.carlos.charles_api.dto.request.ContactRequestDTO;
+import com.carlos.charles_api.model.EmailData;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class ContactRequestService {
                 "</html>\n", requestDto.name()
         );
 
-        EmailDTO email = new EmailDTO(
+        EmailData email = new EmailData(
                 "Charles support team",
                 supportEmail,
                 requestDto.email(),
@@ -66,7 +66,7 @@ public class ContactRequestService {
                 + "<p><strong>Mensagem:</strong><br>" + requestDto.message() + "</p>"
                 + "</body></html>";
 
-        EmailDTO email = new EmailDTO(
+        EmailData email = new EmailData(
                 "Charles API backend App",
                 supportEmail,
                 supportEmail,

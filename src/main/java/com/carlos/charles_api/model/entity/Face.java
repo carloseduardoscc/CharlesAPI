@@ -1,4 +1,4 @@
-package com.carlos.charles_api.model;
+package com.carlos.charles_api.model.entity;
 
 import com.carlos.charles_api.model.enums.EntityState;
 import com.carlos.charles_api.model.enums.FaceRole;
@@ -30,7 +30,7 @@ public class Face {
     private List<ServiceOrder> managedSO = new ArrayList<>();
     @OneToMany(mappedBy = "collaborator")
     private List<ServiceOrder> openSO = new ArrayList<>();
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) // Mapeia o valor da enum para uma string ao invés de uma tabela separada no banco de dados
     private FaceRole role;
     @ManyToOne
     @JoinColumn(name = "workspace_id")

@@ -1,9 +1,8 @@
-package com.carlos.charles_api.security;
+package com.carlos.charles_api.service;
 
 
 import com.carlos.charles_api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

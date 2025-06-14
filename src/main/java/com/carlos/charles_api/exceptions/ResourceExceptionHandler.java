@@ -1,10 +1,5 @@
-package com.carlos.charles_api.controller.exceptionHandler;
+package com.carlos.charles_api.exceptions;
 
-import com.carlos.charles_api.model.User;
-import com.carlos.charles_api.service.exceptions.DatabaseException;
-import com.carlos.charles_api.service.exceptions.EmailException;
-import com.carlos.charles_api.service.exceptions.ResourceNotFoundException;
-import com.carlos.charles_api.service.exceptions.UserAlreadyExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +9,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-import java.time.LocalDateTime;
 
 //TRATAMENTO GERAL DE EXCEÇÕES
 @ControllerAdvice
