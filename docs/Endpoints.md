@@ -10,6 +10,8 @@
 - [/auth](#auth)
   - [POST /auth/register](#1-authregister)
   - [POST /auth/login](#2-authlogin)
+- [/workspace](#workspace)
+-   - [POST /workspace/{workspaceId}/serviceorder](#1-workspaceworkspaceidserviceorder)
 
 ## /contactRequest
 
@@ -76,5 +78,23 @@ Este endpoint recebe o login e senha, valida no banco de dados e retorna um toke
 {
   //token a ser guardado e usado nas próximas requisições
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6Ik..."
+}
+```
+
+## /Workspace
+
+### 1. **/workspace/{workspaceId}/serviceorder**
+
+#### Descrição:
+Endpoint para collaborators abrirem ordens de serviço!
+
+#### Requisição:
+**URL**: `/workspace/{workspaceId}/serviceorder`  
+**Método**: `POST`
+
+**Body**:
+```json
+{
+  "description": "Meu monitor parou de funcionar!"
 }
 ```
