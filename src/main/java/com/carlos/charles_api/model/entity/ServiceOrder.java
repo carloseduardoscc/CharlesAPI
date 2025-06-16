@@ -1,4 +1,4 @@
-package com.carlos.charles_api.model;
+package com.carlos.charles_api.model.entity;
 
 import com.carlos.charles_api.model.enums.SoStateType;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package com.carlos.charles_api.model;
+package com.carlos.charles_api.model.entity;
 
 import com.carlos.charles_api.model.enums.EntityState;
 import jakarta.persistence.*;
@@ -62,7 +62,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();//todo ALTERAR
+        return List.of();
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.carlos.charles_api.repository;
 
-import com.carlos.charles_api.model.User;
+import com.carlos.charles_api.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -1,7 +1,7 @@
 package com.carlos.charles_api.service;
 
-import com.carlos.charles_api.model.dto.EmailDTO;
-import com.carlos.charles_api.service.exceptions.EmailException;
+import com.carlos.charles_api.model.EmailData;
+import com.carlos.charles_api.exceptions.EmailException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class JavaEmailService implements EmailService {
     @Autowired
     private final JavaMailSender sender;
 
-    public void sendEmail(EmailDTO emailDTO){
+    public void sendEmail(EmailData emailDTO){
 
         try {
             MimeMessage message = sender.createMimeMessage();

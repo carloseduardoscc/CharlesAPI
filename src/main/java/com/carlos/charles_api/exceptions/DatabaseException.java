@@ -1,4 +1,4 @@
-package com.carlos.charles_api.service.exceptions;
+package com.carlos.charles_api.exceptions;
 
 public class DatabaseException extends RuntimeException{
     public DatabaseException(String message) {
