@@ -11,7 +11,8 @@
   - [POST /auth/register](#1-authregister)
   - [POST /auth/login](#2-authlogin)
 - [/workspace](#workspace)
--   - [POST /workspace/{workspaceId}/serviceorder](#1-workspaceworkspaceidserviceorder)
+  - [POST /workspace/](#1-workspace)
+  - [POST /workspace/{workspaceId}/serviceorder](#2-workspaceworkspaceidserviceorder)
 
 ## /contactRequest
 
@@ -83,7 +84,30 @@ Este endpoint recebe o login e senha, valida no banco de dados e retorna um toke
 
 ## /Workspace
 
-### 1. **/workspace/{workspaceId}/serviceorder**
+### 1. **/workspace/**
+
+#### Descrição:
+Endpoint para listar workspaces que o usuário autenticado faz parte.
+
+#### Requisição:
+**URL**: `/workspace/`  
+**Método**: `GET`
+
+**Resposta**
+```json
+[
+  {
+    "id": 1,
+    "identification": "NewWorkspace"
+  },
+  {
+    "id": 2,
+    "identification": "NewWorkspace2"
+  }
+]
+```
+
+### 2. **/workspace/{workspaceId}/serviceorder**
 
 #### Descrição:
 Endpoint para collaborators abrirem ordens de serviço!
@@ -98,3 +122,4 @@ Endpoint para collaborators abrirem ordens de serviço!
   "description": "Meu monitor parou de funcionar!"
 }
 ```
+

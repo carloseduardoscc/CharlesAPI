@@ -1,9 +1,9 @@
 package com.carlos.charles_api.service;
 
 import com.carlos.charles_api.dto.request.AuthenticationDTO;
-import com.carlos.charles_api.dto.LoginResponseDTO;
+import com.carlos.charles_api.dto.response.LoginDTO;
 import com.carlos.charles_api.model.entity.User;
-import com.carlos.charles_api.dto.RegisterDTO;
+import com.carlos.charles_api.dto.request.RegisterDTO;
 import com.carlos.charles_api.repository.UserRepository;
 import com.carlos.charles_api.exceptions.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class AuthenticationService {
      * Realiza o processo de login/autenticação do usuário.
      * Autentica as credenciais via Spring Security e gera um token JWT para o usuário autenticado.
      */
-    public LoginResponseDTO login(AuthenticationDTO data) {
+    public LoginDTO login(AuthenticationDTO data) {
         // Cria objeto com as credenciais recebidas
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         // Realiza a autenticação (pode lançar exceção se as credenciais estiverem erradas)
@@ -40,7 +40,7 @@ public class AuthenticationService {
         // Gera token para o usuário autenticado
         var token = tokenService.generateToken((User) auth.getPrincipal());
         // Retorna DTO contendo o token JWT
-        return new LoginResponseDTO(token);
+        return new LoginDTO(token);
     }
 
     /**

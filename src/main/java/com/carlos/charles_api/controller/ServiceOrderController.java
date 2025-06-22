@@ -1,8 +1,7 @@
 package com.carlos.charles_api.controller;
 
-import com.carlos.charles_api.dto.OpenServiceOrderRequestDTO;
-import com.carlos.charles_api.model.ServiceOrder;
-import com.carlos.charles_api.model.dto.OpenServiceOrderRequestDTO;
+import com.carlos.charles_api.dto.request.OpenServiceOrderDTO;
+import com.carlos.charles_api.model.entity.ServiceOrder;
 import com.carlos.charles_api.service.ServiceOrderService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.beans.Transient;
 import java.net.URI;
 
 @RestController
@@ -31,7 +29,7 @@ public class ServiceOrderController {
 
     @Transactional
     @PostMapping()
-    public ResponseEntity open(@RequestBody @Valid OpenServiceOrderRequestDTO soData){
+    public ResponseEntity open(@RequestBody @Valid OpenServiceOrderDTO soData){
         ServiceOrder os = service.create(soData, workspaceId);
 
         URI uri = ServletUriComponentsBuilder

@@ -1,5 +1,6 @@
 package com.carlos.charles_api.config.security;
 
+
 import com.carlos.charles_api.exceptions.ResourceExceptionHandler;
 import com.carlos.charles_api.exceptions.StandardError;
 import jakarta.servlet.ServletException;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
+
 
 import java.io.IOException;
 

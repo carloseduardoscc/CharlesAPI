@@ -1,10 +1,6 @@
-package com.carlos.charles_api.controller.exceptionHandler;
+package com.carlos.charles_api.exceptions;
 
-import com.carlos.charles_api.model.User;
-import com.carlos.charles_api.service.exceptions.DatabaseException;
-import com.carlos.charles_api.service.exceptions.EmailException;
-import com.carlos.charles_api.service.exceptions.ResourceNotFoundException;
-import com.carlos.charles_api.service.exceptions.UserAlreadyExistsException;
+import com.carlos.charles_api.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

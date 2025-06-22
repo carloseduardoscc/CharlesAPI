@@ -1,9 +1,9 @@
 package com.carlos.charles_api.service;
 
-import com.carlos.charles_api.model.Face;
-import com.carlos.charles_api.model.User;
-import com.carlos.charles_api.model.Workspace;
-import com.carlos.charles_api.service.exceptions.ResourceNotFoundException;
+import com.carlos.charles_api.exceptions.ResourceNotFoundException;
+import com.carlos.charles_api.model.entity.Face;
+import com.carlos.charles_api.model.entity.User;
+import com.carlos.charles_api.model.entity.Workspace;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,12 +1,12 @@
-package com.carlos.charles_api.security;
+package com.carlos.charles_api.service;
 
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.carlos.charles_api.model.User;
-import com.carlos.charles_api.service.exceptions.BusinessRuleException;
+import com.carlos.charles_api.exceptions.BusinessRuleException;
+import com.carlos.charles_api.model.entity.User;
 import com.carlos.charles_api.model.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

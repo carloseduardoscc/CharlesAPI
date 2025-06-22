@@ -1,6 +1,5 @@
 package com.carlos.charles_api.config.security;
 
-import com.carlos.charles_api.exceptions.ResourceExceptionHandler;
 import com.carlos.charles_api.model.enums.FaceRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +60,7 @@ public class SecurityConfigurations {
                             .requestMatchers("/auth/login").permitAll()
                             .requestMatchers("/auth/register").permitAll()
                             .requestMatchers("/contactRequest/send").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/workspace/").authenticated()
                             .requestMatchers(HttpMethod.POST, "/workspace/{workspaceId}/serviceorder").hasRole(FaceRole.COLLABORATOR.toString())
                             .requestMatchers(HttpMethod.POST, "/workspace/{workspaceId}/").hasRole(FaceRole.COLLABORATOR.toString())
                             .anyRequest().authenticated()

@@ -1,4 +1,4 @@
-package com.carlos.charles_api.dto;
+package com.carlos.charles_api.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

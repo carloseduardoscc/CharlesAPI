@@ -1,21 +1,19 @@
 package com.carlos.charles_api.service;
 
-import com.carlos.charles_api.model.*;
-import com.carlos.charles_api.model.dto.OpenServiceOrderRequestDTO;
+import com.carlos.charles_api.dto.request.OpenServiceOrderDTO;
+import com.carlos.charles_api.exceptions.BusinessRuleException;
+import com.carlos.charles_api.exceptions.ResourceNotFoundException;
+import com.carlos.charles_api.model.entity.*;
 import com.carlos.charles_api.model.enums.FaceRole;
 import com.carlos.charles_api.model.enums.SoStateType;
 import com.carlos.charles_api.repository.FaceRepository;
 import com.carlos.charles_api.repository.ServiceOrderRepository;
 import com.carlos.charles_api.repository.WorkspaceRepository;
-import com.carlos.charles_api.service.exceptions.BusinessRuleException;
-import com.carlos.charles_api.service.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -41,7 +39,7 @@ public class ServiceOrderService {
 
     private Random random = new Random();
 
-    public ServiceOrder create(OpenServiceOrderRequestDTO soData, Long workspaceId) {
+    public ServiceOrder create(OpenServiceOrderDTO soData, Long workspaceId) {
         // Busca de dados
         User user = uService.getCurrentAuthenticatedUser();
         Workspace workspace = wRepo.findById(workspaceId).orElseThrow(() -> new ResourceNotFoundException("Workspace com ID " + workspaceId + " não foi encontrado!"));

@@ -1,8 +1,8 @@
 package com.carlos.charles_api.controller;
 
 import com.carlos.charles_api.dto.request.AuthenticationDTO;
-import com.carlos.charles_api.dto.LoginResponseDTO;
-import com.carlos.charles_api.dto.RegisterDTO;
+import com.carlos.charles_api.dto.response.LoginDTO;
+import com.carlos.charles_api.dto.request.RegisterDTO;
 import com.carlos.charles_api.service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
-        LoginResponseDTO response = service.login(data);
+        LoginDTO response = service.login(data);
         return ResponseEntity.ok(response);
     }
 
