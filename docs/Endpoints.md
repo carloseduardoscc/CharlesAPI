@@ -11,8 +11,9 @@
   - [POST /auth/register](#1-authregister)
   - [POST /auth/login](#2-authlogin)
 - [/workspace](#workspace)
-  - [POST /workspace/](#1-workspace)
+  - [GET /workspace/](#1-workspace)
   - [POST /workspace/{workspaceId}/serviceorder](#2-workspaceworkspaceidserviceorder)
+  - [POST /workspace/](#3-workspace)
 
 ## /contactRequest
 
@@ -122,4 +123,28 @@ Endpoint para collaborators abrirem ordens de serviço!
   "description": "Meu monitor parou de funcionar!"
 }
 ```
+
+### 3. **/workspace/**
+
+#### Descrição:
+Endpoint para criação de workspaces
+
+#### Requisição:
+**URL**: `/workspace/`  
+**Método**: `POST`
+
+**Body**:
+```json
+{
+  "identification": "Nome do workspace"
+}
+```
+**Resposta**
+```json
+{
+  "id": 5,
+  "identification": "Nome do workspace"
+}
+```
+
 

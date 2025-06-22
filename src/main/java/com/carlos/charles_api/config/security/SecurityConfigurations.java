@@ -60,7 +60,7 @@ public class SecurityConfigurations {
                             .requestMatchers("/auth/login").permitAll()
                             .requestMatchers("/auth/register").permitAll()
                             .requestMatchers("/contactRequest/send").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/workspace/").authenticated()
+                            .requestMatchers("/workspace/").authenticated()
                             .requestMatchers(HttpMethod.POST, "/workspace/{workspaceId}/serviceorder").hasRole(FaceRole.COLLABORATOR.toString())
                             .requestMatchers(HttpMethod.POST, "/workspace/{workspaceId}/").hasRole(FaceRole.COLLABORATOR.toString())
                             .anyRequest().authenticated()
