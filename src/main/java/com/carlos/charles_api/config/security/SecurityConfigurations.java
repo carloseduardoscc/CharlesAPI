@@ -61,8 +61,7 @@ public class SecurityConfigurations {
                             .requestMatchers("/auth/register").permitAll()
                             .requestMatchers("/contactRequest/send").permitAll()
                             .requestMatchers("/workspace/").authenticated()
-                            .requestMatchers(HttpMethod.POST, "/workspace/{workspaceId}/serviceorder").hasRole(FaceRole.COLLABORATOR.toString())
-                            .requestMatchers(HttpMethod.POST, "/workspace/{workspaceId}/").hasRole(FaceRole.COLLABORATOR.toString())
+                            .requestMatchers("/workspace/{workspaceId}/serviceorder/").authenticated()
                             .anyRequest().authenticated()
                     )
                     // Mapeia as exceções de autenticação e autorização do security para as classes customizadas que usam o ResourceExceptionHandler
@@ -71,6 +70,7 @@ public class SecurityConfigurations {
                             .authenticationEntryPoint(authenticationEntryPoint)
                     )
                     .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) //filtro de autenticação do usuário
+                    //todo não precisa
                     .addFilterBefore(roleAuthorizationFilter, UsernamePasswordAuthenticationFilter.class) //filtro que verifica autorização por roles
                     .build();
     }

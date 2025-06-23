@@ -46,7 +46,7 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> BusinessRuleException(BusinessRuleException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
         String username = request.getUserPrincipal().getName();
-        String message = "usuário "+username+" não tem permissão para acessar o seguinte recurso: "+request.getRequestURI();
+        String message = e.getMessage();
         StandardError err = new StandardError(status.value(), "Acesso negado", message, request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }

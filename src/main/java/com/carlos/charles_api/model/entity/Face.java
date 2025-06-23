@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "face_tb")
+//todo integrar lá no Usuário
 public class Face {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +26,6 @@ public class Face {
     private User user;
     @Enumerated(EnumType.STRING)
     private EntityState state;
-    //todo o managedSOs é dos supporters e admin, e o openSOs do collaborators, na hora de voltar json mostrar apenas o respectivo de cada um
     @OneToMany(mappedBy = "supporter")
     private List<ServiceOrder> managedSO = new ArrayList<>();
     @OneToMany(mappedBy = "collaborator")

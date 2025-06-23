@@ -1,5 +1,6 @@
 package com.carlos.charles_api.model.enums;
 
+//todo user role ;)
 public enum FaceRole {
     ADMIN("ADMIN"),
     SUPPORTER("SUPPORTER"),

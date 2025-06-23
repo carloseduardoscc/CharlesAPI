@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "workspace_tb")
+//todo não tem face intermedia, é user direto
 public class Workspace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

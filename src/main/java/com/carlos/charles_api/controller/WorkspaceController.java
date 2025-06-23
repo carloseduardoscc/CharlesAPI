@@ -26,6 +26,7 @@ public class WorkspaceController {
      * Lists all workspaces that the authenticated user is part of
      * @return List of workspace DTOs
      */
+    //todo não é mais necessário listar workspaces, o acesso é direto
     @GetMapping("/")
     public ResponseEntity<List<WorkspaceResponseDTO>> listWorkspaces() {
         List<WorkspaceResponseDTO> workspaces = workspaceService.listWorkspacesForCurrentUser();

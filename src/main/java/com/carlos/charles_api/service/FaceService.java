@@ -6,6 +6,7 @@ import com.carlos.charles_api.model.entity.User;
 import com.carlos.charles_api.model.entity.Workspace;
 import org.springframework.stereotype.Service;
 
+//todo provavelmente não necessário
 @Service
 public class FaceService {
 

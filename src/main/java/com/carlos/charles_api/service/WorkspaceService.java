@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+//todo não tem face intermedia, é user direto
 public class WorkspaceService {
 
     @Autowired

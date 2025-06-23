@@ -14,6 +14,7 @@
   - [GET /workspace/](#1-workspace)
   - [POST /workspace/{workspaceId}/serviceorder](#2-workspaceworkspaceidserviceorder)
   - [POST /workspace/](#3-workspace)
+  - [GET /workspace/{workspaceId}/serviceorder](#4-workspaceworkspaceidserviceorder)
 
 ## /contactRequest
 
@@ -145,6 +146,35 @@ Endpoint para criação de workspaces
   "id": 5,
   "identification": "Nome do workspace"
 }
+```
+
+### 4. **/workspace/{workspaceId}/serviceorder**
+
+#### Descrição:
+Endpoint para listar ordens de serviço
+Obs.: Collaborators apenas podem ver OS que eles mesmos abriram
+
+#### Requisição:
+**URL**: `/workspace/{workspaceId}/serviceorder`  
+**Método**: `GET`
+
+**Resposta**
+```json
+[
+  {
+    "id": 1,
+    "soCode": "SO-1A2B3C",
+    "description": "Monitor do computador 27 no setor financeiro não liga",
+    "diagnostic": "Monitor com defeito foi substituído",
+    "currentState": "COMPLETED",
+    "workspaceId": 1,
+    "workspaceIdentification": "NewWorkspace",
+    "collaboratorId": 3,
+    "collaboratorName": "Carlos Alberto",
+    "supporterId": 1,
+    "supporterName": "João Bezerra"
+  }
+]
 ```
 
 

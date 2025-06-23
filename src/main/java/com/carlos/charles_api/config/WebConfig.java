@@ -16,9 +16,9 @@ public class WebConfig implements WebMvcConfigurer {
     String allowedOrigins;
 
     /**
-     * Método que define as configurações de CORS:
+     * Metodo que define as configurações de CORS:
      * - O padrão "/**" indica que todas as rotas (endpoints) estão cobertas.
-     * - allowedMethods, allowedHeaders como "*" permitem qualquer método/cabeçalho.
+     * - allowedMethods, allowedHeaders como "*" permitem qualquer metodo/cabeçalho.
      * - allowedOriginPatterns usa o valor configurado para permitir ou negar origens dinamicamente.
      * - allowCredentials(true) habilita o envio de cookies, headers de autenticação, etc.
      */

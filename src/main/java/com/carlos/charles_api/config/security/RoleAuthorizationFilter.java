@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//todo Provavelmente não será mais útil, a lógica de mapear as roles para os usuários vai ser direto nos override da entidade
 @Component
 public class RoleAuthorizationFilter extends OncePerRequestFilter {
 
@@ -47,7 +48,6 @@ public class RoleAuthorizationFilter extends OncePerRequestFilter {
 
             updateUserAuthorities(roles);
 
-            //todo Fazer funcionar esse logger
             log.debug("Path {} acessed by user {} with {} authority", path, user.getEmail(), roles.toArray());
         }
 

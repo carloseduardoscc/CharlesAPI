@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "user_tb")
+//todo integrar face aqui
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,8 +59,13 @@ public class User implements UserDetails {
         this.state = EntityState.ACTIVE;
     }
 
+    public String getFullName() {
+        return name + " " + lastName;
+    }
+
     // INFORMAÇÕES PARA AUTENTICAÇÃO E AUTORIZAÇÃO DO SECURITY
 
+    //todo mapeamento dos cargos para os usuários
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
