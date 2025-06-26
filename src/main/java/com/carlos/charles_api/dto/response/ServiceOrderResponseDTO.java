@@ -26,9 +26,9 @@ public record ServiceOrderResponseDTO(
             serviceOrder.getWorkspace().getId(),
             serviceOrder.getWorkspace().getIdentification(),
             serviceOrder.getCollaborator() != null ? serviceOrder.getCollaborator().getId() : null,
-            serviceOrder.getCollaborator() != null ? serviceOrder.getCollaborator().getUser().getFullName() : null,
+            serviceOrder.getCollaborator() != null ? serviceOrder.getCollaborator().getFullName() : null,
             serviceOrder.getSupporter() != null ? serviceOrder.getSupporter().getId() : null,
-            serviceOrder.getSupporter() != null ? serviceOrder.getSupporter().getUser().getFullName() : null
+            serviceOrder.getSupporter() != null ? serviceOrder.getSupporter().getFullName() : null
         );
     }
 }

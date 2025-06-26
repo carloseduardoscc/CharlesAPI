@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "workspace_tb")
-//todo não tem face intermedia, é user direto
 public class Workspace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +23,14 @@ public class Workspace {
     @OneToMany(mappedBy = "workspace")
     private List<ServiceOrder> serviceOrders = new ArrayList<>();
     @OneToMany(mappedBy = "workspace")
-    private List<Face> faces = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
     public Workspace(Long id, String identification) {
         this.id = id;
+        this.identification = identification;
+    }
+
+    public Workspace(String identification) {
         this.identification = identification;
     }
 }

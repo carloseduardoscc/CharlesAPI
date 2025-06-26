@@ -1,11 +1,13 @@
 package com.carlos.charles_api.model.entity;
 
 import com.carlos.charles_api.model.enums.EntityState;
+import com.carlos.charles_api.model.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -18,10 +20,13 @@ import java.util.List;
 @Entity(name = "user_tb")
 //todo integrar face aqui
 public class User implements UserDetails {
+
+    //Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //Internal
     @Column(unique = true, nullable = false)
     private String email;
     private String password;
@@ -29,34 +34,25 @@ public class User implements UserDetails {
     private String lastName;
 
     //External
+    @Enumerated(EnumType.STRING) // Mapeia o valor da enum para uma string ao invés de uma tabela separada no banco de dados
+    private UserRole role;
     @Enumerated(EnumType.STRING)
-    private EntityState state;
-    @OneToMany(mappedBy = "user")
-    private List<Face> faces = new ArrayList<>();
+    private EntityState state = EntityState.ACTIVE;
+    @OneToMany(mappedBy = "supporter")
+    private List<ServiceOrder> managedSo = new ArrayList<>();
+    @OneToMany(mappedBy = "collaborator")
+    private List<ServiceOrder> openSo = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "workspace_id")
+    private Workspace workspace;
 
-    public User(Long id, String email, String name, String lastName, EntityState state) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
-        this.lastName = lastName;
-        this.state = state;
-    }
-
-    public User(Long id, String email, String name, String lastName) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
-        this.lastName = lastName;
-        this.state = EntityState.ACTIVE;
-    }
-
-    public User(String email, String password, String name, String lastName) {
+    public User(String email, String password, String name, String lastName, UserRole role, Workspace workspace) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.lastName = lastName;
-        this.id = null;
-        this.state = EntityState.ACTIVE;
+        this.role = role;
+        this.workspace = workspace;
     }
 
     public String getFullName() {
@@ -65,10 +61,9 @@ public class User implements UserDetails {
 
     // INFORMAÇÕES PARA AUTENTICAÇÃO E AUTORIZAÇÃO DO SECURITY
 
-    //todo mapeamento dos cargos para os usuários
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_"+role));
     }
 
     @Override

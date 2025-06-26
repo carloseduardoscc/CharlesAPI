@@ -1,8 +1,8 @@
 package com.carlos.charles_api.controller;
 
-import com.carlos.charles_api.dto.request.AuthenticationDTO;
+import com.carlos.charles_api.dto.request.AuthenticationRequestDTO;
 import com.carlos.charles_api.dto.response.LoginDTO;
-import com.carlos.charles_api.dto.request.RegisterDTO;
+import com.carlos.charles_api.dto.request.RegisterRequestDTO;
 import com.carlos.charles_api.service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +19,16 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService service;
 
+    //faz login e entrega o JWT
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
+    public ResponseEntity login(@RequestBody @Valid AuthenticationRequestDTO data) {
         LoginDTO response = service.login(data);
         return ResponseEntity.ok(response);
     }
 
+    //cria um usuário owner com seu workspace
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody @Valid RegisterDTO registerDTO) {
+    public ResponseEntity register(@RequestBody @Valid RegisterRequestDTO registerDTO) {
         service.register(registerDTO);
         return ResponseEntity.ok("{}");
     }

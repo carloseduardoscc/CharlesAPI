@@ -5,9 +5,8 @@ import com.carlos.charles_api.dto.response.ServiceOrderResponseDTO;
 import com.carlos.charles_api.exceptions.BusinessRuleException;
 import com.carlos.charles_api.exceptions.ResourceNotFoundException;
 import com.carlos.charles_api.model.entity.*;
-import com.carlos.charles_api.model.enums.FaceRole;
+import com.carlos.charles_api.model.enums.UserRole;
 import com.carlos.charles_api.model.enums.SoStateType;
-import com.carlos.charles_api.repository.FaceRepository;
 import com.carlos.charles_api.repository.ServiceOrderRepository;
 import com.carlos.charles_api.repository.WorkspaceRepository;
 import jakarta.transaction.Transactional;
@@ -52,7 +51,7 @@ public class ServiceOrderService {
         Face face = fService.getFaceByWorkspaceAndUser(workspace, user);
 
         // Filtros de regra de negócio (proteção extra!)
-        if (face.getRole() != FaceRole.COLLABORATOR) {
+        if (face.getRole() != UserRole.COLLABORATOR) {
             throw new BusinessRuleException("Apenas Colaboradores 'COLLABORATOR' podem abrir ordem de serviço! O usuário atual tem permissões de " + face.getRole().toString());
         }
 
@@ -89,14 +88,14 @@ public class ServiceOrderService {
         List<ServiceOrder> serviceOrders;
 
         // Apply access control based on user role
-        if (face.getRole() == FaceRole.COLLABORATOR) {
+        if (face.getRole() == UserRole.COLLABORATOR) {
             // Collaborators can only see service orders they opened
             serviceOrders = sRepo.findByWorkspaceIdAndCollaboratorId(workspaceId, face.getId());
             logger.atInfo().log("User {} with COLLABORATOR role accessing their service orders in workspace {}",
                     user.getEmail(), workspace.getIdentification());
-        } else if (face.getRole() == FaceRole.SUPPORTER ||
-                face.getRole() == FaceRole.ADMIN ||
-                face.getRole() == FaceRole.OWNER) {
+        } else if (face.getRole() == UserRole.SUPPORTER ||
+                face.getRole() == UserRole.ADMIN ||
+                face.getRole() == UserRole.OWNER) {
             // Supporters, Admins, and Owners can see all service orders in the workspace
             serviceOrders = sRepo.findByWorkspaceId(workspaceId);
             logger.atInfo().log("User {} with {} role accessing all service orders in workspace {}",

@@ -3,7 +3,6 @@ package com.carlos.charles_api.config.security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.carlos.charles_api.model.entity.User;
-import com.carlos.charles_api.repository.FaceRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

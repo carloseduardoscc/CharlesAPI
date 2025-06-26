@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "serviceOrder_tb")
-//todo não tem face intermedia, é user direto
+//todo não tem User intermedia, é user direto
 public class ServiceOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,16 +30,16 @@ public class ServiceOrder {
     private Workspace workspace;
     @ManyToOne
     @JoinColumn(name = "supporter_id")
-    private Face supporter;
+    private User supporter;
     @ManyToOne
     @JoinColumn(name = "collaborator_id")
-    private Face collaborator;
+    private User collaborator;
     @OneToMany(mappedBy = "serviceOrder")
     private List<SoState> states = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private SoStateType currentState;
 
-    public ServiceOrder(Long id, String soCode, String description, String diagnostic, Workspace workspace, Face supporter, Face collaborator, SoStateType currentState) {
+    public ServiceOrder(Long id, String soCode, String description, String diagnostic, Workspace workspace, User supporter, User collaborator, SoStateType currentState) {
         this.id = id;
         this.soCode = soCode;
         this.description = description;
@@ -50,7 +50,7 @@ public class ServiceOrder {
         this.currentState = currentState;
     }
 
-    public ServiceOrder(Long id, String soCode, String description, String diagnostic, Workspace workspace, Face supporter, Face collaborator) {
+    public ServiceOrder(Long id, String soCode, String description, String diagnostic, Workspace workspace, User supporter, User collaborator) {
         this.id = id;
         this.soCode = soCode;
         this.description = description;
@@ -61,7 +61,7 @@ public class ServiceOrder {
         this.currentState = SoStateType.ASSIGNED;
     }
 
-    public ServiceOrder(Long id, String soCode, String description, Workspace workspace, Face collaborator) {
+    public ServiceOrder(Long id, String soCode, String description, Workspace workspace, User collaborator) {
         this.id = id;
         this.soCode = soCode;
         this.description = description;
