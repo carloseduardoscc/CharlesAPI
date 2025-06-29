@@ -2,6 +2,7 @@ package com.carlos.charles_api.service;
 
 import com.carlos.charles_api.dto.request.AuthenticationRequestDTO;
 import com.carlos.charles_api.dto.response.LoginResponseDTO;
+import com.carlos.charles_api.dto.response.UserInfoDTO;
 import com.carlos.charles_api.exceptions.BusinessRuleException;
 import com.carlos.charles_api.model.entity.User;
 import com.carlos.charles_api.dto.request.RegisterRequestDTO;
@@ -34,6 +35,8 @@ public class AuthenticationService {
     private TokenService tokenService;
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceOrderService.class);
+    @Autowired
+    private UserService userService;
 
     public LoginResponseDTO login(AuthenticationRequestDTO data) {
         // Cria objeto com as credenciais recebidas
@@ -67,6 +70,12 @@ public class AuthenticationService {
         userRepository.save(newOwner);
 
         logger.atInfo().log("Usuário {} criado com sucesso!", newOwner.getIdentification());
+    }
+
+    public UserInfoDTO me(){
+        User user = userService.getCurrentAuthenticatedUser();
+        user = userRepository.findById(user.getId()).get();
+        return UserInfoDTO.fromEntity(user);
     }
 
     private void validateUserRegister(RegisterRequestDTO data) {
