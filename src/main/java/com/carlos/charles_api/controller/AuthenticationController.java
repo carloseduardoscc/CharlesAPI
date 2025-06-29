@@ -1,7 +1,7 @@
 package com.carlos.charles_api.controller;
 
 import com.carlos.charles_api.dto.request.AuthenticationRequestDTO;
-import com.carlos.charles_api.dto.response.LoginDTO;
+import com.carlos.charles_api.dto.response.LoginResponseDTO;
 import com.carlos.charles_api.dto.request.RegisterRequestDTO;
 import com.carlos.charles_api.service.AuthenticationService;
 import jakarta.validation.Valid;
@@ -22,7 +22,7 @@ public class AuthenticationController {
     //faz login e entrega o JWT
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationRequestDTO data) {
-        LoginDTO response = service.login(data);
+        LoginResponseDTO response = service.login(data);
         return ResponseEntity.ok(response);
     }
 
@@ -30,7 +30,8 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid RegisterRequestDTO registerDTO) {
         service.register(registerDTO);
-        return ResponseEntity.ok("{}");
+        LoginResponseDTO login = service.login(new AuthenticationRequestDTO(registerDTO.email(), registerDTO.password()));
+        return ResponseEntity.ok(login);
     }
 
 

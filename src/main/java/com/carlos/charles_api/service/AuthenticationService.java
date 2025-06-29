@@ -1,29 +1,27 @@
 package com.carlos.charles_api.service;
 
 import com.carlos.charles_api.dto.request.AuthenticationRequestDTO;
-import com.carlos.charles_api.dto.response.LoginDTO;
+import com.carlos.charles_api.dto.response.LoginResponseDTO;
 import com.carlos.charles_api.exceptions.BusinessRuleException;
 import com.carlos.charles_api.model.entity.User;
 import com.carlos.charles_api.dto.request.RegisterRequestDTO;
 import com.carlos.charles_api.model.entity.Workspace;
-import com.carlos.charles_api.model.enums.EntityState;
-import com.carlos.charles_api.model.enums.UserRole;
+import com.carlos.charles_api.model.enums.Role;
 import com.carlos.charles_api.repository.UserRepository;
-import com.carlos.charles_api.exceptions.UserAlreadyExistsException;
 import com.carlos.charles_api.repository.WorkspaceRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.logging.LoggersEndpoint;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-/**
- * Serviço responsável por autenticação e cadastro de usuários.
- */
 @Service
 public class AuthenticationService {
 
-    // Repositório de acesso ao banco de usuários
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -35,30 +33,24 @@ public class AuthenticationService {
     @Autowired
     private TokenService tokenService;
 
-    /**
-     * Realiza o processo de login/autenticação do usuário.
-     * Autentica as credenciais via Spring Security e gera um token JWT para o usuário autenticado.
-     */
-    public LoginDTO login(AuthenticationRequestDTO data) {
+    private static final Logger logger = LoggerFactory.getLogger(ServiceOrderService.class);
+
+    public LoginResponseDTO login(AuthenticationRequestDTO data) {
         // Cria objeto com as credenciais recebidas
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         // Realiza a autenticação (pode lançar exceção se as credenciais estiverem erradas)
-        var auth = authenticationManager.authenticate(usernamePassword);
+        Authentication auth = authenticationManager.authenticate(usernamePassword);
         // Pega o usuário logado e verifica se ele está ativo
         User user = (User) auth.getPrincipal();
-        if (!user.getState().equals(EntityState.ACTIVE)){
-            throw new BusinessRuleException("Você não tem mais acesso, sua conta foi desativada! Procure seu responsável para saber mais.");
-        }
         // Gera token para o usuário autenticado
         var token = tokenService.generateToken(user);
+
+        logger.atInfo().log("Usuário {} autenticado com sucesso!", user.getIdentification());
+
         // Retorna DTO contendo o token JWT
-        return new LoginDTO(token);
+        return new LoginResponseDTO(token);
     }
 
-    /**
-     * Realiza o cadastro de um novo usuário.
-     * Valida se já existe usuário com o mesmo e-mail, criptografa a senha e salva no banco.
-     */
     public void register(RegisterRequestDTO registerDTO) {
         // Verifica duplicidade de e-mail
         validateUserRegister(registerDTO);
@@ -67,20 +59,18 @@ public class AuthenticationService {
         // Cria workspace
         Workspace newWorkspace = new Workspace(registerDTO.workspaceName());
         // Cria owner
-        User newOwner = new User(registerDTO.email(), encryptedPassword, registerDTO.name(), registerDTO.lastName(), UserRole.OWNER, newWorkspace);
+        User newOwner = new User(registerDTO.email(), encryptedPassword, registerDTO.name(), registerDTO.lastName(), Role.OWNER, newWorkspace);
         // põe owner no workspace
         newWorkspace.getUsers().add(newOwner);
         // Salva novo owner e workspace
-        userRepository.save(newOwner);
         workspaceRepository.save(newWorkspace);
+        userRepository.save(newOwner);
+
+        logger.atInfo().log("Usuário {} criado com sucesso!", newOwner.getIdentification());
     }
 
-    /**
-     * Verifica se já existe usuário com o e-mail informado.
-     * Se existir, lança exceção personalizada de usuário duplicado.
-     */
     private void validateUserRegister(RegisterRequestDTO data) {
         if (this.userRepository.findByEmail(data.email()) != null)
-            throw new UserAlreadyExistsException("O usuário " + data.email() + " já existe!");
+            throw new BusinessRuleException("O usuário com e-mail " + data.email() + " já existe!");
     }
 }

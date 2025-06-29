@@ -1,12 +1,13 @@
 package com.carlos.charles_api.model.entity;
 
-import com.carlos.charles_api.dto.request.OpenServiceOrderDTO;
+import com.carlos.charles_api.dto.request.OpenServiceOrderRequestDTO;
 import com.carlos.charles_api.model.enums.SoStateType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "serviceOrder_tb")
-//todo não tem User intermedia, é user direto
 public class ServiceOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,49 +29,20 @@ public class ServiceOrder {
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
     @ManyToOne
-    @JoinColumn(name = "supporter_id")
-    private User supporter;
+    @JoinColumn(name = "assignee_id")
+    private User assignee;
     @ManyToOne
-    @JoinColumn(name = "collaborator_id")
-    private User collaborator;
-    @OneToMany(mappedBy = "serviceOrder")
-    private List<SoState> states = new ArrayList<>();
+    @JoinColumn(name = "solicitant_id")
+    private User solicitant;
+    @OneToMany(mappedBy = "serviceOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SoState> states = new ArrayList<>(List.of(new SoState(null, LocalDateTime.now(), SoStateType.OPEN, this)));
     @Enumerated(EnumType.STRING)
-    private SoStateType currentState;
+    private SoStateType currentState = SoStateType.OPEN;
 
-    public ServiceOrder(Long id, String soCode, String description, String diagnostic, Workspace workspace, User supporter, User collaborator, SoStateType currentState) {
-        this.id = id;
-        this.soCode = soCode;
-        this.description = description;
-        this.diagnostic = diagnostic;
-        this.workspace = workspace;
-        this.supporter = supporter;
-        this.collaborator = collaborator;
-        this.currentState = currentState;
-    }
-
-    public ServiceOrder(Long id, String soCode, String description, String diagnostic, Workspace workspace, User supporter, User collaborator) {
-        this.id = id;
-        this.soCode = soCode;
-        this.description = description;
-        this.diagnostic = diagnostic;
-        this.workspace = workspace;
-        this.supporter = supporter;
-        this.collaborator = collaborator;
-        this.currentState = SoStateType.ASSIGNED;
-    }
-
-    public ServiceOrder(Long id, String soCode, String description, Workspace workspace, User collaborator) {
-        this.id = id;
+    public ServiceOrder(String soCode, String description, Workspace workspace, User solicitant) {
         this.soCode = soCode;
         this.description = description;
         this.workspace = workspace;
-        this.collaborator = collaborator;
-        this.currentState = SoStateType.ASSIGNED;
-    }
-
-    public ServiceOrder(OpenServiceOrderDTO dto){
-        this.currentState = SoStateType.ASSIGNED;
-        this.description = dto.description();
+        this.solicitant = solicitant;
     }
 }

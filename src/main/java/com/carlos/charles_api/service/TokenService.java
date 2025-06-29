@@ -5,21 +5,21 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.carlos.charles_api.exceptions.BusinessRuleException;
-import com.carlos.charles_api.model.entity.User;
+import com.carlos.charles_api.exceptions.AuthenticationException;
 import com.carlos.charles_api.model.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.naming.AuthenticationException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Service
 public class TokenService {
+
     @Value("${api.security.token.secret}")
     private String secret;
+    private int expirationTime = 2;
 
     public String generateToken(User user){
         try{
@@ -31,7 +31,7 @@ public class TokenService {
                     .sign(algorithm);
             return token;
         } catch (JWTCreationException exception) {
-            throw new RuntimeException("Error while generating token", exception);
+            throw new AuthenticationException("Erro criando o token: "+exception.getMessage( ) + "\n" + exception.getCause( ));
         }
     }
 
@@ -44,11 +44,11 @@ public class TokenService {
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException exception){
-            throw new BusinessRuleException("Token expirou! Faça login novamente");
+            throw new AuthenticationException("Token expirou! Faça login novamente");
         }
     }
 
     private Instant genExpirationDate(){
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusHours(expirationTime).toInstant(ZoneOffset.of("-03:00"));
     }
 }

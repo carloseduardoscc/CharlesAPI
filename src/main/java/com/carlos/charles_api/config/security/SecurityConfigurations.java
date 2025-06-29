@@ -21,15 +21,7 @@ import java.util.List;
 public class SecurityConfigurations {
 
     @Autowired
-    CustomAccessDeniedHandler accessDeniedHandler;
-    @Autowired
-    CustomAuthenticationEntryPoint authenticationEntryPoint;
-
-    @Autowired
     JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @Autowired
-    RoleAuthorizationFilter roleAuthorizationFilter;
 
     @Value("${api.security.cors.allowed_origins}")
     String allowedOrigins;
@@ -41,6 +33,7 @@ public class SecurityConfigurations {
                     .headers(headers -> headers // Permite uso de iframes (necessário para o H2 Console)
                             .frameOptions(frame -> frame.disable())
                     )
+                    // Desabilita o padrão de segurança csrf
                     .csrf(csrf -> csrf.disable())
                     // Configuração de CORS do Security, ele tem um aparte do padrão do Spring que precisa também ser configurado
                     .cors(cors -> cors.configurationSource(request -> {
@@ -58,18 +51,9 @@ public class SecurityConfigurations {
                             .requestMatchers("/auth/login").permitAll()
                             .requestMatchers("/auth/register").permitAll()
                             .requestMatchers("/contactRequest/send").permitAll()
-                            .requestMatchers("/workspace/").authenticated()
-                            .requestMatchers("/workspace/{workspaceId}/serviceorder/").authenticated()
                             .anyRequest().authenticated()
                     )
-                    // Mapeia as exceções de autenticação e autorização do security para as classes customizadas que usam o ResourceExceptionHandler
-                    .exceptionHandling(ex -> ex
-                            .accessDeniedHandler(accessDeniedHandler)
-                            .authenticationEntryPoint(authenticationEntryPoint)
-                    )
                     .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) //filtro de autenticação do usuário
-                    //todo não precisa
-                    .addFilterBefore(roleAuthorizationFilter, UsernamePasswordAuthenticationFilter.class) //filtro que verifica autorização por roles
                     .build();
     }
 

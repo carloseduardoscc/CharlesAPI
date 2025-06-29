@@ -1,13 +1,12 @@
 package com.carlos.charles_api.model.enums;
 
-//todo user role ;)
-public enum UserRole {
+public enum Role {
     ADMIN("ADMIN"),
     SUPPORTER("SUPPORTER"),
     COLLABORATOR("COLLABORATOR"),
     OWNER("OWNER");
     String name;
-    UserRole(String name){
+    Role(String name){
         this.name = name;
     }
     @Override

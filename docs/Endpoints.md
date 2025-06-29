@@ -10,11 +10,9 @@
 - [/auth](#auth)
   - [POST /auth/register](#1-authregister)
   - [POST /auth/login](#2-authlogin)
-- [/workspace](#workspace)
-  - [GET /workspace/](#1-workspace)
-  - [POST /workspace/{workspaceId}/serviceorder](#2-workspaceworkspaceidserviceorder)
-  - [POST /workspace/](#3-workspace)
-  - [GET /workspace/{workspaceId}/serviceorder](#4-workspaceworkspaceidserviceorder)
+- [/serviceorder](#serviceorder)
+  - [POST /serviceorder](#1-serviceorder)
+  - [GET /serviceorder](#2-serviceorder)
 
 ## /contactRequest
 
@@ -56,7 +54,8 @@ Endpoint para criação de um novo usuário, todos os dados são obrigatórios!
   "email":"joaosilva@gmail.com",
   "password":"123456789",
   "name":"João",
-  "lastName":"Silva"
+  "lastName":"Silva",
+  "workspaceName": "My workspace"
 }
 ```
 
@@ -84,38 +83,15 @@ Este endpoint recebe o login e senha, valida no banco de dados e retorna um toke
 }
 ```
 
-## /Workspace
+## /serviceorder
 
-### 1. **/workspace/**
-
-#### Descrição:
-Endpoint para listar workspaces que o usuário autenticado faz parte.
-
-#### Requisição:
-**URL**: `/workspace/`  
-**Método**: `GET`
-
-**Resposta**
-```json
-[
-  {
-    "id": 1,
-    "identification": "NewWorkspace"
-  },
-  {
-    "id": 2,
-    "identification": "NewWorkspace2"
-  }
-]
-```
-
-### 2. **/workspace/{workspaceId}/serviceorder**
+### 1. **/serviceorder**
 
 #### Descrição:
-Endpoint para collaborators abrirem ordens de serviço!
+Endpoint para abrir ordens de serviço!
 
 #### Requisição:
-**URL**: `/workspace/{workspaceId}/serviceorder`  
+**URL**: `/serviceorder`  
 **Método**: `POST`
 
 **Body**:
@@ -125,54 +101,26 @@ Endpoint para collaborators abrirem ordens de serviço!
 }
 ```
 
-### 3. **/workspace/**
-
-#### Descrição:
-Endpoint para criação de workspaces
-
-#### Requisição:
-**URL**: `/workspace/`  
-**Método**: `POST`
-
-**Body**:
-```json
-{
-  "identification": "Nome do workspace"
-}
-```
-**Resposta**
-```json
-{
-  "id": 5,
-  "identification": "Nome do workspace"
-}
-```
-
-### 4. **/workspace/{workspaceId}/serviceorder**
+### 2. **/serviceorder**
 
 #### Descrição:
 Endpoint para listar ordens de serviço
 Obs.: Collaborators apenas podem ver OS que eles mesmos abriram
 
 #### Requisição:
-**URL**: `/workspace/{workspaceId}/serviceorder`  
+**URL**: `/serviceorder`  
 **Método**: `GET`
 
 **Resposta**
 ```json
 [
   {
-    "id": 1,
-    "soCode": "SO-1A2B3C",
-    "description": "Monitor do computador 27 no setor financeiro não liga",
-    "diagnostic": "Monitor com defeito foi substituído",
-    "currentState": "COMPLETED",
-    "workspaceId": 1,
-    "workspaceIdentification": "NewWorkspace",
-    "collaboratorId": 3,
-    "collaboratorName": "Carlos Alberto",
-    "supporterId": 1,
-    "supporterName": "João Bezerra"
+    "id": 4,
+    "soCode": "CH-00004",
+    "description": "Impressora não funciona",
+    "currentState": "CANCELED",
+    "collaboratorName": "Collaborator3 Name",
+    "supporterName": "Supporter2 Name"
   }
 ]
 ```

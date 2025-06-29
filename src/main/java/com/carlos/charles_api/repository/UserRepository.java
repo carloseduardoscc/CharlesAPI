@@ -6,5 +6,5 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     // Metodo customizado para buscar pelo e-mail
-    UserDetails findByEmail(String email);
+    User findByEmail(String email);
 }

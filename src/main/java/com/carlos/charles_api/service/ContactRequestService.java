@@ -1,9 +1,12 @@
 package com.carlos.charles_api.service;
 
 import com.carlos.charles_api.dto.request.ContactRequestDTO;
+import com.carlos.charles_api.exceptions.EmailException;
 import com.carlos.charles_api.model.EmailData;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,9 +22,17 @@ public class ContactRequestService {
     @Value("${spring.mail.username}")
     private String supportEmail;
 
+    private static final Logger logger = LoggerFactory.getLogger(ServiceOrderService.class);
+
+
     public void send(ContactRequestDTO request) {
-        sendContactRequestEmailToSupport(request);
-        sendConfirmationEmailToUser(request);
+        try {
+            sendContactRequestEmailToSupport(request);
+            sendConfirmationEmailToUser(request);
+            logger.atInfo().log("Email enviado com sucesso para o email {} e para o email de suporte {}.", request.email(), supportEmail);
+        } catch (Exception e) {
+            throw new EmailException(e.getMessage());
+        }
     }
 
     private void sendConfirmationEmailToUser(ContactRequestDTO requestDto) {
