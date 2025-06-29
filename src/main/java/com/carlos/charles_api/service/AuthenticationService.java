@@ -34,7 +34,7 @@ public class AuthenticationService {
     @Autowired
     private TokenService tokenService;
 
-    private static final Logger logger = LoggerFactory.getLogger(ServiceOrderService.class);
+    private static final Logger logger = LoggerFactory.getLogger("ACCESS_LOGGER");
     @Autowired
     private UserService userService;
 

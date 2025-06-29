@@ -1,6 +1,7 @@
 package com.carlos.charles_api.controller;
 
 import com.carlos.charles_api.dto.request.OpenServiceOrderRequestDTO;
+import com.carlos.charles_api.dto.response.ServiceOrderDetailsDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderSummaryDTO;
 import com.carlos.charles_api.service.ServiceOrderService;
 import jakarta.transaction.Transactional;
@@ -38,5 +39,11 @@ public class ServiceOrderController {
     public ResponseEntity<List<ServiceOrderSummaryDTO>> listServiceOrders() {
         List<ServiceOrderSummaryDTO> serviceOrders = service.listServiceOrders();
         return ResponseEntity.ok(serviceOrders);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ServiceOrderDetailsDTO> serviceOrderDetails(@PathVariable Long id) {
+        ServiceOrderDetailsDTO serviceOrderDetailsDTO = service.serviceOrderDetails(id);
+        return ResponseEntity.ok(serviceOrderDetailsDTO);
     }
 }

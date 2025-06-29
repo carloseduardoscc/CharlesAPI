@@ -22,8 +22,7 @@ public class ContactRequestService {
     @Value("${spring.mail.username}")
     private String supportEmail;
 
-    private static final Logger logger = LoggerFactory.getLogger(ServiceOrderService.class);
-
+    private static final Logger logger = LoggerFactory.getLogger("ACCESS_LOGGER");
 
     public void send(ContactRequestDTO request) {
         try {

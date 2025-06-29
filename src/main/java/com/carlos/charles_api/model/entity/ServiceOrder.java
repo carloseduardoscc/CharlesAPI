@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -35,7 +36,7 @@ public class ServiceOrder {
     @JoinColumn(name = "solicitant_id")
     private User solicitant;
     @OneToMany(mappedBy = "serviceOrder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SoState> states = new ArrayList<>(List.of(new SoState(null, LocalDateTime.now(), SoStateType.OPEN, this)));
+    private List<SoState> states = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private SoStateType currentState = SoStateType.OPEN;
 
@@ -44,5 +45,17 @@ public class ServiceOrder {
         this.description = description;
         this.workspace = workspace;
         this.solicitant = solicitant;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ServiceOrder that = (ServiceOrder) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

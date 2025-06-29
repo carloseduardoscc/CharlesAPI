@@ -10,9 +10,11 @@
 - [/auth](#auth)
   - [POST /auth/register](#1-authregister)
   - [POST /auth/login](#2-authlogin)
+  - [POST /auth/me](#3-authme)
 - [/serviceorder](#serviceorder)
   - [POST /serviceorder](#1-serviceorder)
   - [GET /serviceorder](#2-serviceorder)
+  - [GET /serviceorder/{id}](#3-serviceorderid)
 
 ## /contactRequest
 
@@ -83,6 +85,27 @@ Este endpoint recebe o login e senha, valida no banco de dados e retorna um toke
 }
 ```
 
+### 3. **/auth/me**
+
+#### Descrição:
+Endpoint para acessar detalhes do usuário autenticado pelo JWT
+#### Requisição:
+**URL**: `/auth/me`  
+**Método**: `GET`
+
+**Resposta**
+```json
+{
+  "id": 10,
+  "email": "collaborator3@example.com",
+  "name": "Collaborator3",
+  "lastname": "Name",
+  "role": "COLLABORATOR",
+  "workspaceId": 2,
+  "workspaceIdentification": "Workspace2"
+}
+```
+
 ## /serviceorder
 
 ### 1. **/serviceorder**
@@ -123,6 +146,59 @@ Obs.: Collaborators apenas podem ver OS que eles mesmos abriram
     "supporterName": "Supporter2 Name"
   }
 ]
+```
+
+### 3. **/serviceorder/{id}**
+
+#### Descrição:
+Endpoint para detalhar um ordem de serviço
+
+#### Requisição:
+**URL**: `/serviceorder/{id}`  
+**Método**: `GET`
+
+
+**Resposta**
+```json
+{
+  "id": 4,
+  "soCode": "CH-00004",
+  "description": "Impressora não funciona",
+  "diagnostic": "Usuário pediu para cancelar",
+  "assignee": {
+    "id": 6,
+    "email": "supporter2@example.com",
+    "name": "Supporter2",
+    "lastname": "Name",
+    "role": "SUPPORTER",
+    "workspaceId": 1,
+    "workspaceIdentification": "Workspace1"
+  },
+  "solicitant": {
+    "id": 10,
+    "email": "collaborator3@example.com",
+    "name": "Collaborator3",
+    "lastname": "Name",
+    "role": "COLLABORATOR",
+    "workspaceId": 2,
+    "workspaceIdentification": "Workspace2"
+  },
+  "states": [
+    {
+      "dateTime": "2025-06-24T13:17:27.037319",
+      "type": "OPEN"
+    },
+    {
+      "dateTime": "2025-06-25T13:17:27.037319",
+      "type": "ASSIGNED"
+    },
+    {
+      "dateTime": "2025-06-26T13:17:27.037319",
+      "type": "CANCELED"
+    }
+  ],
+  "currentState": "CANCELED"
+}
 ```
 
 
