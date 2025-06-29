@@ -13,4 +13,6 @@ public interface ServiceOrderRepository extends JpaRepository<ServiceOrder, Long
     List<ServiceOrder> findByWorkspaceIdAndSolicitantId(Long workspaceId, Long collaboratorId);
 
     boolean existsBySoCodeAndWorkspace_Id(String soCode, Long workspaceId);
+
+    String findSoCodeById(Long id);
 }

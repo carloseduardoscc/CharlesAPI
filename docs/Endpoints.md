@@ -15,6 +15,7 @@
   - [POST /serviceorder](#1-serviceorder)
   - [GET /serviceorder](#2-serviceorder)
   - [GET /serviceorder/{id}](#3-serviceorderid)
+  - [GET /serviceorder/{id}/report](#4-serviceorderidreport)
 
 ## /contactRequest
 
@@ -200,5 +201,15 @@ Endpoint para detalhar um ordem de serviço
   "currentState": "CANCELED"
 }
 ```
+
+
+### 4. **/serviceorder/{id}/report**
+
+#### Descrição:
+Endpoint para fazer download do relatório em PDF
+
+#### Requisição:
+**URL**: `/serviceorder/{id}/report`  
+**Método**: `GET`
 
 

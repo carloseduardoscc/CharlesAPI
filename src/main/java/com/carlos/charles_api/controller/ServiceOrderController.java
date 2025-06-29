@@ -3,11 +3,12 @@ package com.carlos.charles_api.controller;
 import com.carlos.charles_api.dto.request.OpenServiceOrderRequestDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderDetailsDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderSummaryDTO;
+import com.carlos.charles_api.model.entity.ServiceOrder;
 import com.carlos.charles_api.service.ServiceOrderService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -45,5 +46,19 @@ public class ServiceOrderController {
     public ResponseEntity<ServiceOrderDetailsDTO> serviceOrderDetails(@PathVariable Long id) {
         ServiceOrderDetailsDTO serviceOrderDetailsDTO = service.serviceOrderDetails(id);
         return ResponseEntity.ok(serviceOrderDetailsDTO);
+    }
+
+    @GetMapping("/{so_id}/report")
+    public ResponseEntity<byte[]> downloadReport(@PathVariable Long so_id) {
+        byte[] pdf = service.generateSoReport(so_id);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition
+                .builder("attachment")
+                .filename("relatorio_os_.pdf")
+                .build());
+
+        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
     }
 }

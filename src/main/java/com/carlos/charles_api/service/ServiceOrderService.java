@@ -5,6 +5,7 @@ import com.carlos.charles_api.dto.response.ServiceOrderDetailsDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderSummaryDTO;
 import com.carlos.charles_api.exceptions.BusinessRuleException;
 import com.carlos.charles_api.exceptions.ResourceNotFoundException;
+import com.carlos.charles_api.infra.pdf.PdfReportGenerator;
 import com.carlos.charles_api.model.entity.*;
 import com.carlos.charles_api.model.enums.Role;
 import com.carlos.charles_api.model.enums.SoStateType;
@@ -30,6 +31,9 @@ public class ServiceOrderService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PdfReportGenerator pdfReportGenerator;
 
     private Random random = new Random();
 
@@ -82,19 +86,51 @@ public class ServiceOrderService {
     @Transactional
     public ServiceOrderDetailsDTO serviceOrderDetails(Long id) {
         User user = userService.getCurrentAuthenticatedUser();
-        Workspace workspace = user.getWorkspace();
-        ServiceOrder so = serviceOrderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ordem de serviço com id: " + id + " não foi encontrado!"));
-        if (!so.getWorkspace().getId().equals(workspace.getId())) {
-            throw new BusinessRuleException("A ordem de serviço não pertence ao seu workspace");
-        }
-        if (user.getRole().equals(Role.COLLABORATOR) && !user.getOpenSo().contains(so)) {
-            throw new BusinessRuleException("Como Collaborator você não tem acesso a outras ordens de serviço além das suas abertas");
-        }
+        ServiceOrder so = findOsAndValidateIfNull(id);
+        validateOsAcessByWorkspace(user, so);
+        validateOsAcessByUserOpenOs(user, so);
 
         logger.atInfo().log("Usuário " +
                 "{} acessou os detalhes da ordem de serviço {} ",user.getIdentification(),  so.getSoCode());
 
         return ServiceOrderDetailsDTO.fromEntity(so);
+    }
+
+    @Transactional
+    public byte[] generateSoReport (Long soId){
+        User user = userService.getCurrentAuthenticatedUser();
+        ServiceOrder so = findOsAndValidateIfNull(soId);
+        validateOsAcessByWorkspace(user, so);
+        validateOsAcessByUserOpenOs(user, so);
+        validateOsIsReportable(so);
+        return pdfReportGenerator.generateServiceOrderReport(so);
+    }
+
+    private void validateOsIsReportable(ServiceOrder so) {
+        if (!List.of(SoStateType.CANCELED, SoStateType.COMPLETED).contains(so.getCurrentState())){
+            throw new BusinessRuleException("Não é possível gerar um relatório de uma ordem de serviço antes dela estar completa ou cancelada!");
+        }
+    }
+
+    // busca os no banco e valida se existe
+    private ServiceOrder findOsAndValidateIfNull(Long soId) {
+        ServiceOrder so = serviceOrderRepository.findById(soId).orElseThrow(() -> new ResourceNotFoundException("Ordem de serviço com id: " + soId + " não foi encontrado!"));
+        return so;
+    }
+
+    // valida com base nos cargos se o usuário pode acessar uma Os que ele não abriu
+    private static void validateOsAcessByUserOpenOs(User user, ServiceOrder so) {
+        if (user.getRole().equals(Role.COLLABORATOR) && !user.getOpenSo().contains(so)) {
+            throw new BusinessRuleException("Como Collaborator você não tem acesso a outras ordens de serviço além das suas abertas");
+        }
+    }
+
+    // valida se a os está no mesmo workspace que o usuário
+    private static void validateOsAcessByWorkspace(User user, ServiceOrder so) {
+        Workspace workspace = user.getWorkspace();
+        if (!so.getWorkspace().getId().equals(workspace.getId())) {
+            throw new BusinessRuleException("Você não tem acesso a ordens de serviço fora do seu workspace");
+        }
     }
 
     public String generateSoCode() {
