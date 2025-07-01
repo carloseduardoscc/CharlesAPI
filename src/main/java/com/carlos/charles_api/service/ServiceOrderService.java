@@ -35,12 +35,13 @@ public class ServiceOrderService {
     @Autowired
     private PdfReportGenerator pdfReportGenerator;
 
+    @Autowired
+    private SoStateRepository soStateRepository;
+
     private Random random = new Random();
 
     private static final Logger logger = LoggerFactory.getLogger("ACCESS_LOGGER");
 
-    @Autowired
-    private SoStateRepository soStateRepository;
     private WorkspaceRepository workspaceRepository;
 
     @Transactional
@@ -104,6 +105,30 @@ public class ServiceOrderService {
         validateOsAcessByUserOpenOs(user, so);
         validateOsIsReportable(so);
         return pdfReportGenerator.generateServiceOrderReport(so);
+    }
+
+
+    @Transactional
+    public void assignOs(Long soId) {
+        User user = userService.getCurrentAuthenticatedUser();
+        ServiceOrder so = findOsAndValidateIfNull(soId);
+        validateOsAcessByWorkspace(user, so);
+        validateIfOsIsAssignable(user, so);
+        SoState assignState = new  SoState(null, LocalDateTime.now(), SoStateType.ASSIGNED, so);
+        so.getStates().add(assignState);
+        so.setCurrentState(SoStateType.ASSIGNED);
+        so.setAssignee(user);
+
+        serviceOrderRepository.save(so);
+        soStateRepository.save(assignState);
+    }
+
+    private void validateIfOsIsAssignable(User user, ServiceOrder so) {
+        if (!List.of(Role.ADMIN, Role.SUPPORTER).contains(user.getRole())) {
+            throw new BusinessRuleException("Para se responsabilizar por uma tarefa você deve ser SUPPORTER ou ADMIN, seu cargo é de "+user.getRole().toString());
+        } else if ( !so.getCurrentState().equals(SoStateType.OPEN)){
+            throw new BusinessRuleException("Para se responsablizar por uma ordem de serviço ela deve estar aberta, atualmente ela está "+so.getCurrentState().getName());
+        }
     }
 
     private void validateOsIsReportable(ServiceOrder so) {

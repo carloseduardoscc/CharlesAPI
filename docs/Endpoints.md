@@ -16,6 +16,7 @@
   - [GET /serviceorder](#2-serviceorder)
   - [GET /serviceorder/{id}](#3-serviceorderid)
   - [GET /serviceorder/{id}/report](#4-serviceorderidreport)
+  - [GET /serviceorder/{id}/assign](#5-serviceorderidassign)
 
 ## /contactRequest
 
@@ -211,5 +212,14 @@ Endpoint para fazer download do relatório em PDF
 #### Requisição:
 **URL**: `/serviceorder/{id}/report`  
 **Método**: `GET`
+
+### 5. **/serviceorder/{id}/assign**
+
+#### Descrição:
+Endpoint para se responsabilizar numa ordem de serviço aberta
+
+#### Requisição:
+**URL**: `/serviceorder/{id}/assign`  
+**Método**: `POST`
 
 

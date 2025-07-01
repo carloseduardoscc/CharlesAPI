@@ -36,6 +36,12 @@ public class ServiceOrderController {
         return ResponseEntity.created(uri).build();
     }
 
+    @PostMapping("/{id}/assign")
+    public ResponseEntity assign(@PathVariable Long id){
+        service.assignOs(id);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping()
     public ResponseEntity<List<ServiceOrderSummaryDTO>> listServiceOrders() {
         List<ServiceOrderSummaryDTO> serviceOrders = service.listServiceOrders();
