@@ -48,6 +48,12 @@ public class ServiceOrderController {
         return ResponseEntity.ok("Order cancelado com sucesso!");
     }
 
+    @PostMapping("/{id}/complete")
+    public ResponseEntity complete(@PathVariable Long id){
+        service.completeOs(id);
+        return ResponseEntity.ok("Ordem completado com sucesso!");
+    }
+
     @GetMapping()
     public ResponseEntity<List<ServiceOrderSummaryDTO>> listServiceOrders() {
         List<ServiceOrderSummaryDTO> serviceOrders = service.listServiceOrders();

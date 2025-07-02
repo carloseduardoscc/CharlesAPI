@@ -18,6 +18,7 @@
   - [POST /serviceorder/{id}/report](#4-serviceorderidreport)
   - [POST /serviceorder/{id}/assign](#5-serviceorderidassign)
   - [POST /serviceorder/{id}/cancel](#5-serviceorderidcancel)
+  - [POST /serviceorder/{id}/cancel](#5-serviceorderidcancel)
 
 ## /contactRequest
 
@@ -232,6 +233,16 @@ Usuário se responsabilizou e ela ainda está em andamento
 
 #### Requisição:
 **URL**: `/serviceorder/{id}/cancel`  
+**Método**: `POST`
+
+### 6. **/serviceorder/{id}/complete**
+
+#### Descrição:
+Endpoint para completar uma os, permitido se:
+Usuário se responsabilizou e ela ainda está em andamento
+
+#### Requisição:
+**URL**: `/serviceorder/{id}/complete`  
 **Método**: `POST`
 
 

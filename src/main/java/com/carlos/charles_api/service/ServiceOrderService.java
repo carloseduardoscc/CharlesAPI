@@ -137,6 +137,31 @@ public class ServiceOrderService {
         soStateRepository.save(cancelState);
     }
 
+    @Transactional
+    public void completeOs(Long soId) {
+        User user = userService.getCurrentAuthenticatedUser();
+        ServiceOrder so = findOsAndValidateIfNull(soId);
+        validateOsAcessByWorkspace(user, so);
+        validateIfOsCanBeCompleted(user, so);
+
+        SoState completeState = new SoState(null, LocalDateTime.now(), SoStateType.COMPLETED, so);
+        so.getStates().add(completeState);
+        so.setCurrentState(SoStateType.COMPLETED);
+
+        serviceOrderRepository.save(so);
+        soStateRepository.save(completeState);
+    }
+
+    private void validateIfOsCanBeCompleted(User user, ServiceOrder so) {
+        if (so.getAssignee() == null || !so.getAssignee().equals(user)) {
+            throw new BusinessRuleException("Você não pode completar uma ordem de serviço em que não é responsável!");
+        }
+        if (!so.getCurrentState().equals(SoStateType.ASSIGNED)) {
+            throw new BusinessRuleException("Você não pode completar uma ordem de serviço que não está em andamento, atualmente ela está "+so.getCurrentState().getName());
+
+        }
+    }
+
     // valida se o usuário pode se responsabilizar na Os
     private void validateIfOsIsAssignable(User user, ServiceOrder so) {
         if (!List.of(Role.ADMIN, Role.SUPPORTER).contains(user.getRole())) {
