@@ -92,13 +92,13 @@ public class ServiceOrderService {
         validateOsAcessByUserOpenOs(user, so);
 
         logger.atInfo().log("Usuário " +
-                "{} acessou os detalhes da ordem de serviço {} ",user.getIdentification(),  so.getSoCode());
+                "{} acessou os detalhes da ordem de serviço {} ", user.getIdentification(), so.getSoCode());
 
         return ServiceOrderDetailsDTO.fromEntity(so);
     }
 
     @Transactional
-    public byte[] generateSoReport (Long soId){
+    public byte[] generateSoReport(Long soId) {
         User user = userService.getCurrentAuthenticatedUser();
         ServiceOrder so = findOsAndValidateIfNull(soId);
         validateOsAcessByWorkspace(user, so);
@@ -114,7 +114,7 @@ public class ServiceOrderService {
         ServiceOrder so = findOsAndValidateIfNull(soId);
         validateOsAcessByWorkspace(user, so);
         validateIfOsIsAssignable(user, so);
-        SoState assignState = new  SoState(null, LocalDateTime.now(), SoStateType.ASSIGNED, so);
+        SoState assignState = new SoState(null, LocalDateTime.now(), SoStateType.ASSIGNED, so);
         so.getStates().add(assignState);
         so.setCurrentState(SoStateType.ASSIGNED);
         so.setAssignee(user);
@@ -123,16 +123,51 @@ public class ServiceOrderService {
         soStateRepository.save(assignState);
     }
 
+    @Transactional
+    public void cancelOs(Long soId) {
+        User user = userService.getCurrentAuthenticatedUser();
+        ServiceOrder so = findOsAndValidateIfNull(soId);
+        validateOsAcessByWorkspace(user, so);
+        validateIfOsCanBeCanceled(user, so);
+        SoState cancelState = new SoState(null, LocalDateTime.now(), SoStateType.CANCELED, so);
+        so.getStates().add(cancelState);
+        so.setCurrentState(SoStateType.CANCELED);
+
+        serviceOrderRepository.save(so);
+        soStateRepository.save(cancelState);
+    }
+
+    // valida se o usuário pode se responsabilizar na Os
     private void validateIfOsIsAssignable(User user, ServiceOrder so) {
         if (!List.of(Role.ADMIN, Role.SUPPORTER).contains(user.getRole())) {
-            throw new BusinessRuleException("Para se responsabilizar por uma tarefa você deve ser SUPPORTER ou ADMIN, seu cargo é de "+user.getRole().toString());
-        } else if ( !so.getCurrentState().equals(SoStateType.OPEN)){
-            throw new BusinessRuleException("Para se responsablizar por uma ordem de serviço ela deve estar aberta, atualmente ela está "+so.getCurrentState().getName());
+            throw new BusinessRuleException("Para se responsabilizar por uma tarefa você deve ser SUPPORTER ou ADMIN, seu cargo é de " + user.getRole().toString());
+        } else if (!so.getCurrentState().equals(SoStateType.OPEN)) {
+            throw new BusinessRuleException("Para se responsablizar por uma ordem de serviço ela deve estar aberta, atualmente ela está " + so.getCurrentState().getName());
         }
     }
 
+    // valida se a Os pode ser cancelada
+    private void validateIfOsCanBeCanceled(User user, ServiceOrder so) {
+        if (so.getSolicitant().equals(user)) {
+            if (!so.getCurrentState().equals(SoStateType.OPEN)) {
+                throw new BusinessRuleException("Solicitantes da ordem de serviço só podem cancelar quando a mesma ainda está aberta, atualmente ela está " + so.getCurrentState().getName());
+            } else {
+                return;
+            }
+        } else if (so.getAssignee() != null && so.getAssignee().equals(user)) {
+            if (!so.getCurrentState().equals(SoStateType.ASSIGNED)) {
+                throw new BusinessRuleException("Responsáveis da ordem de serviço só podem cancelar quando a mesma ainda está em andamento, atualmente ela está " + so.getCurrentState().getName());
+            } else {
+                return;
+            }
+        } else {
+            throw new BusinessRuleException("Você não pode cancelar uma ordem de serviço onde não está envolvido!");
+        }
+    }
+
+    // valida se a Os pode ser exportada como relatório
     private void validateOsIsReportable(ServiceOrder so) {
-        if (!List.of(SoStateType.CANCELED, SoStateType.COMPLETED).contains(so.getCurrentState())){
+        if (!List.of(SoStateType.CANCELED, SoStateType.COMPLETED).contains(so.getCurrentState())) {
             throw new BusinessRuleException("Não é possível gerar um relatório de uma ordem de serviço antes dela estar completa ou cancelada!");
         }
     }

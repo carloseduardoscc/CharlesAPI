@@ -39,7 +39,13 @@ public class ServiceOrderController {
     @PostMapping("/{id}/assign")
     public ResponseEntity assign(@PathVariable Long id){
         service.assignOs(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Order assigned!");
+    }
+
+    @PostMapping("/{id}/cancel")
+    public ResponseEntity cancel(@PathVariable Long id){
+        service.cancelOs(id);
+        return ResponseEntity.ok("Order cancelado com sucesso!");
     }
 
     @GetMapping()

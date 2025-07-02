@@ -15,8 +15,9 @@
   - [POST /serviceorder](#1-serviceorder)
   - [GET /serviceorder](#2-serviceorder)
   - [GET /serviceorder/{id}](#3-serviceorderid)
-  - [GET /serviceorder/{id}/report](#4-serviceorderidreport)
-  - [GET /serviceorder/{id}/assign](#5-serviceorderidassign)
+  - [POST /serviceorder/{id}/report](#4-serviceorderidreport)
+  - [POST /serviceorder/{id}/assign](#5-serviceorderidassign)
+  - [POST /serviceorder/{id}/cancel](#5-serviceorderidcancel)
 
 ## /contactRequest
 
@@ -220,6 +221,17 @@ Endpoint para se responsabilizar numa ordem de serviço aberta
 
 #### Requisição:
 **URL**: `/serviceorder/{id}/assign`  
+**Método**: `POST`
+
+### 5. **/serviceorder/{id}/cancel**
+
+#### Descrição:
+Endpoint para cancelar uma os, permitido se:
+Usuário abriu a ordem e ela ainda está aberta, 
+Usuário se responsabilizou e ela ainda está em andamento
+
+#### Requisição:
+**URL**: `/serviceorder/{id}/cancel`  
 **Método**: `POST`
 
 
