@@ -18,7 +18,9 @@
   - [POST /serviceorder/{id}/report](#4-serviceorderidreport)
   - [POST /serviceorder/{id}/assign](#5-serviceorderidassign)
   - [POST /serviceorder/{id}/cancel](#5-serviceorderidcancel)
-  - [POST /serviceorder/{id}/cancel](#5-serviceorderidcancel)
+  - [POST /serviceorder/{id}/complete](#6-serviceorderidcomplete)
+- [/participants](#participants)
+  - [POST /participants](#1-participants)
 
 ## /contactRequest
 
@@ -228,7 +230,9 @@ Endpoint para se responsabilizar numa ordem de serviço aberta
 
 #### Descrição:
 Endpoint para cancelar uma os, permitido se:
+
 Usuário abriu a ordem e ela ainda está aberta, 
+
 Usuário se responsabilizou e ela ainda está em andamento
 
 #### Requisição:
@@ -239,10 +243,45 @@ Usuário se responsabilizou e ela ainda está em andamento
 
 #### Descrição:
 Endpoint para completar uma os, permitido se:
+
 Usuário se responsabilizou e ela ainda está em andamento
 
 #### Requisição:
 **URL**: `/serviceorder/{id}/complete`  
 **Método**: `POST`
 
+## /participants
 
+### 1. **/participants**
+
+#### Descrição:
+Endpoint para adicionar um novo participante, permitido se:
+
+Owner pode adicionar admin, supporter e collaborator,
+
+Admin pode adicionar supporter e collaborator
+
+Outros cargos não podem adicionar participantes
+
+#### Requisição:
+**URL**: `/participants`  
+**Método**: `POST`
+
+**Body**:
+```json
+{
+  "name": "NewParticipant",
+  "lastName": "Test",
+  "email": "newparticipant3@gmail.com",
+  "password": "passwordtest123",
+  "role": "OWNER"
+}
+```
+
+**Resposta**
+```json
+{
+  "email": "newparticipant3@gmail.com",
+  "password": "passwordtest123"
+}
+```

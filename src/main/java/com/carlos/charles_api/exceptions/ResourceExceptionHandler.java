@@ -1,9 +1,11 @@
 package com.carlos.charles_api.exceptions;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -76,6 +78,22 @@ public class ResourceExceptionHandler {
         }
 
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
+    }
+
+    // FORMATO DE CAMPO ENUM INVÁLIDO
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<StandardError> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
+        Throwable cause = ex.getCause();
+        if (cause instanceof InvalidFormatException) {
+            InvalidFormatException ife = (InvalidFormatException) cause;
+            Class<?> targetType = ife.getTargetType();
+            String message = "Valor inválido para o campo enum: " + targetType.getSimpleName();
+            HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+            StandardError err = new StandardError(status.value(), "Erro na entrada de valores padrão", message, request.getRequestURI());
+            return ResponseEntity.status(status.UNPROCESSABLE_ENTITY).body(err);
+        } else {
+            return genericException(ex, request);
+        }
     }
 
     // QUALQUER OUTRA EXCEÇÃO

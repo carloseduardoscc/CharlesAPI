@@ -33,10 +33,10 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private TokenService tokenService;
-
-    private static final Logger logger = LoggerFactory.getLogger("ACCESS_LOGGER");
     @Autowired
     private UserService userService;
+
+    private static final Logger logger = LoggerFactory.getLogger("ACCESS_LOGGER");
 
     public LoginResponseDTO login(AuthenticationRequestDTO data) {
         // Cria objeto com as credenciais recebidas
@@ -56,7 +56,7 @@ public class AuthenticationService {
 
     public void register(RegisterRequestDTO registerDTO) {
         // Verifica duplicidade de e-mail
-        validateUserRegister(registerDTO);
+        validateUserRegister(registerDTO.email());
         // Criptografa a senha
         String encryptedPassword = passwordEncoder.encode(registerDTO.password());
         // Cria workspace
@@ -78,8 +78,8 @@ public class AuthenticationService {
         return UserInfoDTO.fromEntity(user);
     }
 
-    private void validateUserRegister(RegisterRequestDTO data) {
-        if (this.userRepository.findByEmail(data.email()) != null)
-            throw new BusinessRuleException("O usuário com e-mail " + data.email() + " já existe!");
+    private void validateUserRegister(String email) {
+        if (this.userRepository.findByEmail(email) != null)
+            throw new BusinessRuleException("O usuário com e-mail " + email + " já existe!");
     }
 }
