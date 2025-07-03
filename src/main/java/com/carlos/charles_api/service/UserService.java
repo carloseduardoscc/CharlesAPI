@@ -2,6 +2,7 @@ package com.carlos.charles_api.service;
 
 import com.carlos.charles_api.dto.request.NewParticipantDTO;
 import com.carlos.charles_api.dto.response.NewParticipantResponseDTO;
+import com.carlos.charles_api.dto.response.ParticipantDTO;
 import com.carlos.charles_api.exceptions.BusinessRuleException;
 import com.carlos.charles_api.model.entity.User;
 import com.carlos.charles_api.model.entity.Workspace;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -52,6 +54,14 @@ public class UserService {
         return new NewParticipantResponseDTO(newParticipantDTO.email(), newParticipantDTO.password());
     }
 
+    @Transactional
+    public List<ParticipantDTO> listParticipants() {
+        User thisUser = getCurrentAuthenticatedUser();
+        return thisUser.getWorkspace().getUsers().stream()
+                .map(ParticipantDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
     private void validateUserRegister(String email) {
         if (this.userRepository.findByEmail(email) != null)
             throw new BusinessRuleException("O usuário com e-mail " + email + " já existe!");
@@ -77,5 +87,4 @@ public class UserService {
             throw new BusinessRuleException("Seu usuário " + thisUser.getRole().name() + " não tem permissão para adicionar um novo participante no workspace!");
         }
     }
-
 }

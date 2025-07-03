@@ -285,3 +285,32 @@ Outros cargos não podem adicionar participantes
   "password": "passwordtest123"
 }
 ```
+
+### 1. **/participants**
+
+#### Descrição:
+Endpoint para listar participants do próprio workspace
+
+#### Requisição:
+**URL**: `/participants`  
+**Método**: `GET`
+
+**Resposta**
+```json
+[
+  {
+    "id": 2,
+    "name": "Owner2 Name",
+    "email": "owner2@example.com",
+    "role": "OWNER",
+    "isActive": true
+  },
+  {
+    "id": 4,
+    "name": "Admin2 Name",
+    "email": "admin2@example.com",
+    "role": "ADMIN",
+    "isActive": true
+  }
+]
+```
