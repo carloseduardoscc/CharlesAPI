@@ -165,6 +165,14 @@ public class ExampleDataLoader implements CommandLineRunner
         so3.setSolicitant(collaborator1);
         so3.setCurrentState(SoStateType.OPEN);
 
+        ServiceOrder so5 = new ServiceOrder();
+        so3.setSoCode("CH-00005");
+        so3.setDescription("Interferência na rede");
+        so3.setWorkspace(workspace1);
+        so3.setAssignee(supporter1);
+        so3.setSolicitant(collaborator1);
+        so3.setCurrentState(SoStateType.CANCELED);
+
         ServiceOrder so4 = new ServiceOrder();
         so4.setSoCode("CH-00004");
         so4.setDescription("Impressora não funciona");
@@ -174,7 +182,7 @@ public class ExampleDataLoader implements CommandLineRunner
         so4.setCurrentState(SoStateType.CANCELED);
         so4.setDiagnostic("Usuário pediu para cancelar");
 
-        soRepo.saveAll(List.of(so1, so2, so3, so4));
+        soRepo.saveAll(List.of(so1, so2, so3, so4, so5));
 
         // Create service order states (history)
         // SO1 states
@@ -194,11 +202,17 @@ public class ExampleDataLoader implements CommandLineRunner
         SoState so4State2 = new SoState(null, LocalDateTime.now().minusDays(4), SoStateType.ASSIGNED, so4);
         SoState so4State3 = new SoState(null, LocalDateTime.now().minusDays(3), SoStateType.CANCELED, so4);
 
+        // SO4 states
+        SoState so5State1 = new SoState(null, LocalDateTime.now().minusDays(6), SoStateType.OPEN, so5);
+        SoState so5State2 = new SoState(null, LocalDateTime.now().minusDays(5), SoStateType.ASSIGNED, so5);
+        SoState so5State3 = new SoState(null, LocalDateTime.now().minusDays(4), SoStateType.CANCELED, so5);
+
         soStateRepo.saveAll(List.of(
                 so1State1, so1State2,
                 so2State1, so2State2, so2State3,
                 so3State1,
-                so4State1, so4State2, so4State3
+                so4State1, so4State2, so4State3,
+                so5State1, so5State2, so5State3
         ));
 
         logger.atInfo().log("Dados de exemplo carregados com sucesso!");

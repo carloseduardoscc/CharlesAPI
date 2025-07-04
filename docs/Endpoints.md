@@ -17,9 +17,11 @@
   - [GET /serviceorder/{id}](#3-serviceorderid)
   - [POST /serviceorder/{id}/report](#4-serviceorderidreport)
   - [POST /serviceorder/{id}/assign](#5-serviceorderidassign)
-  - [POST /serviceorder/{id}/cancel](#5-serviceorderidcancel)
-  - [POST /serviceorder/{id}/complete](#6-serviceorderidcomplete)
+  - [POST /serviceorder/{id}/cancel](#6-serviceorderidcancel)
+  - [POST /serviceorder/{id}/complete](#7-serviceorderidcomplete)
+  - [POST /serviceorder/{id}/statistcs](#8-serviceorderstatistcs)
 - [/participants](#participants)
+  - [POST /participants](#1-participants)
   - [POST /participants](#1-participants)
 
 ## /contactRequest
@@ -226,7 +228,7 @@ Endpoint para se responsabilizar numa ordem de serviço aberta
 **URL**: `/serviceorder/{id}/assign`  
 **Método**: `POST`
 
-### 5. **/serviceorder/{id}/cancel**
+### 6. **/serviceorder/{id}/cancel**
 
 #### Descrição:
 Endpoint para cancelar uma os, permitido se:
@@ -239,7 +241,7 @@ Usuário se responsabilizou e ela ainda está em andamento
 **URL**: `/serviceorder/{id}/cancel`  
 **Método**: `POST`
 
-### 6. **/serviceorder/{id}/complete**
+### 7. **/serviceorder/{id}/complete**
 
 #### Descrição:
 Endpoint para completar uma os, permitido se:
@@ -249,6 +251,27 @@ Usuário se responsabilizou e ela ainda está em andamento
 #### Requisição:
 **URL**: `/serviceorder/{id}/complete`  
 **Método**: `POST`
+
+### 8. **/serviceorder/statistcs**
+
+#### Descrição:
+Endpoint para gerar estatísticas sobre as ordens de serviço
+
+#### Requisição:
+**URL**: `/serviceorder/statistcs`  
+**Método**: `GET`
+
+**Resposta**
+```json
+{
+  "open": 0,
+  "assigned": 1,
+  "canceled": 1,
+  "completed": 1,
+  "closed": 2,
+  "all": 3
+}
+```
 
 ## /participants
 
@@ -314,3 +337,17 @@ Endpoint para listar participants do próprio workspace
   }
 ]
 ```
+### 1. **/participants**
+
+#### Descrição:
+Endpoint para desativar um participante:
+
+Owner pode adicionar admin, supporter e collaborator,
+
+Admin pode adicionar supporter e collaborator
+
+Outros cargos não podem adicionar participantes
+
+#### Requisição:
+**URL**: `/participants/{id}/deactivate`  
+**Método**: `POST`

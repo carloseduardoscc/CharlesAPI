@@ -2,6 +2,7 @@ package com.carlos.charles_api.service;
 
 import com.carlos.charles_api.dto.request.OpenServiceOrderRequestDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderDetailsDTO;
+import com.carlos.charles_api.dto.response.ServiceOrderStatistcsDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderSummaryDTO;
 import com.carlos.charles_api.exceptions.BusinessRuleException;
 import com.carlos.charles_api.exceptions.ResourceNotFoundException;
@@ -151,6 +152,23 @@ public class ServiceOrderService {
         serviceOrderRepository.save(so);
         soStateRepository.save(completeState);
     }
+
+    @Transactional
+    public ServiceOrderStatistcsDTO serviceOrderStatistcsDTO() {
+        User user = userService.getCurrentAuthenticatedUser();
+        Workspace workspace = user.getWorkspace();
+
+        return new ServiceOrderStatistcsDTO(
+                serviceOrderRepository.countByWorkspaceAndCurrentStateIsIn(workspace, List.of(SoStateType.OPEN)),
+                serviceOrderRepository.countByWorkspaceAndCurrentStateIsIn(workspace, List.of(SoStateType.ASSIGNED)),
+                serviceOrderRepository.countByWorkspaceAndCurrentStateIsIn(workspace, List.of(SoStateType.CANCELED)),
+                serviceOrderRepository.countByWorkspaceAndCurrentStateIsIn(workspace, List.of(SoStateType.COMPLETED)),
+                serviceOrderRepository.countByWorkspaceAndCurrentStateIsIn(workspace, List.of(SoStateType.CANCELED, SoStateType.COMPLETED)),
+                serviceOrderRepository.countByWorkspace(workspace)
+        );
+    }
+
+    // VALIDAÇÕES
 
     private void validateIfOsCanBeCompleted(User user, ServiceOrder so) {
         if (so.getAssignee() == null || !so.getAssignee().equals(user)) {

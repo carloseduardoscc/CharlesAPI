@@ -2,6 +2,7 @@ package com.carlos.charles_api.controller;
 
 import com.carlos.charles_api.dto.request.OpenServiceOrderRequestDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderDetailsDTO;
+import com.carlos.charles_api.dto.response.ServiceOrderStatistcsDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderSummaryDTO;
 import com.carlos.charles_api.model.entity.ServiceOrder;
 import com.carlos.charles_api.service.ServiceOrderService;
@@ -64,6 +65,12 @@ public class ServiceOrderController {
     public ResponseEntity<ServiceOrderDetailsDTO> serviceOrderDetails(@PathVariable Long id) {
         ServiceOrderDetailsDTO serviceOrderDetailsDTO = service.serviceOrderDetails(id);
         return ResponseEntity.ok(serviceOrderDetailsDTO);
+    }
+
+    @GetMapping("/statistcs")
+    public ResponseEntity<ServiceOrderStatistcsDTO> serviceOrderDetails() {
+        ServiceOrderStatistcsDTO response = service.serviceOrderStatistcsDTO();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{so_id}/report")

@@ -4,6 +4,8 @@ import com.carlos.charles_api.dto.request.NewParticipantDTO;
 import com.carlos.charles_api.dto.response.NewParticipantResponseDTO;
 import com.carlos.charles_api.dto.response.ParticipantDTO;
 import com.carlos.charles_api.exceptions.BusinessRuleException;
+import com.carlos.charles_api.exceptions.ResourceNotFoundException;
+import com.carlos.charles_api.model.entity.ServiceOrder;
 import com.carlos.charles_api.model.entity.User;
 import com.carlos.charles_api.model.entity.Workspace;
 import com.carlos.charles_api.model.enums.Role;
@@ -40,14 +42,12 @@ public class UserService {
     public NewParticipantResponseDTO addParticipant(NewParticipantDTO newParticipantDTO) {
         User thisUser = getCurrentAuthenticatedUser();
 
-        // valida se pode proceder a adição do usuário
         validateAddParticipant(thisUser, newParticipantDTO);
-        // Criptografa a senha
+
         String encryptedPassword = passwordEncoder.encode(newParticipantDTO.password());
-        // cria o usuário do novo participante dentro do workspace
         Workspace thisWorkspace = thisUser.getWorkspace();
         User newParticipant = new User(newParticipantDTO.email(), encryptedPassword, newParticipantDTO.name(), newParticipantDTO.lastName(), newParticipantDTO.role(), thisWorkspace);
-        // Salva novo owner
+
         userRepository.save(newParticipant);
         logger.atInfo().log("O " + thisUser.getIdentification() + " do workspace " + thisWorkspace.getIdentification() + " adicionou um novo participante: \n" + newParticipant.getIdentification());
 
@@ -57,9 +57,62 @@ public class UserService {
     @Transactional
     public List<ParticipantDTO> listParticipants() {
         User thisUser = getCurrentAuthenticatedUser();
+
+        logger.atInfo().log("O " + thisUser.getIdentification() + " do workspace " + thisUser.getWorkspace().getIdentification() + " listou os participantes de seu workspace");
+
         return thisUser.getWorkspace().getUsers().stream()
                 .map(ParticipantDTO::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deactivate(Long userId) {
+        User thisUser = getCurrentAuthenticatedUser();
+        User userToDeactivate = findUserandValidateIfNull(userId);
+
+        validateUserAcessByWorkspace(thisUser, userToDeactivate);
+        validateAutoDeactivation(thisUser, userToDeactivate);
+        validateDeactivateParticipant(thisUser, userToDeactivate);
+
+        userToDeactivate.setEnabled(false);
+        userRepository.save(userToDeactivate);
+
+        logger.atInfo().log( "O " + thisUser.getIdentification() + " do workspace " + thisUser.getWorkspace().getIdentification() + " listou os participantes de seu workspace");
+    }
+
+    // VALIDAÇÕES
+
+    private User findUserandValidateIfNull(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuário com id: " + userId + " não foi encontrado!"));
+        return user;
+    }
+
+    private void validateAutoDeactivation(User thisUser, User userToDeactivate) {
+        if (thisUser.equals(userToDeactivate)) {
+            throw new BusinessRuleException("Você não pode se desativar!");
+        }
+    }
+
+    // valida se a os está no mesmo workspace que o usuário
+    private static void validateUserAcessByWorkspace(User user, User acessedUser) {
+        Workspace workspace = user.getWorkspace();
+        if (!user.getWorkspace().getUsers().contains(acessedUser)) {
+            throw new BusinessRuleException("Você não tem acesso a usuários de fora do seu workspace!");
+        }
+    }
+
+    private static void validateDeactivateParticipant(User thisUser, User userToDeactivate) {
+        if (thisUser.getRole().equals(Role.OWNER)) {
+            if (!List.of(Role.SUPPORTER, Role.COLLABORATOR, Role.ADMIN).contains(userToDeactivate.getRole())) {
+                throw new BusinessRuleException("Owners só podem desativar administradores, suportes e colaboradores! Você tentou desativar um " + userToDeactivate.getRole().name());
+            }
+        } else if (thisUser.getRole().equals(Role.ADMIN)) {
+            if (!List.of(Role.SUPPORTER, Role.COLLABORATOR).contains(userToDeactivate.getRole())) {
+                throw new BusinessRuleException("Admins só podem desativar suportes e colaboradores! Você tentou desativar um " + userToDeactivate.getRole().name());
+            }
+        } else {
+            throw new BusinessRuleException("Seu usuário " + thisUser.getRole().name() + " não tem permissão para desativar um participante do workspace!");
+        }
     }
 
     private void validateUserRegister(String email) {
@@ -74,14 +127,10 @@ public class UserService {
         if (thisUser.getRole().equals(Role.OWNER)) {
             if (!List.of(Role.SUPPORTER, Role.COLLABORATOR, Role.ADMIN).contains(newParticipantDTO.role())) {
                 throw new BusinessRuleException("Owners só podem adicionar administradores, suportes e colaboradores! Você tentou adicionar um " + newParticipantDTO.role().name());
-            } else {
-                return;
             }
         } else if (thisUser.getRole().equals(Role.ADMIN)) {
             if (!List.of(Role.SUPPORTER, Role.COLLABORATOR).contains(newParticipantDTO.role())) {
                 throw new BusinessRuleException("Admins só podem adicionar suportes e colaboradores! Você tentou adicionar um " + newParticipantDTO.role().name());
-            } else {
-                return;
             }
         } else {
             throw new BusinessRuleException("Seu usuário " + thisUser.getRole().name() + " não tem permissão para adicionar um novo participante no workspace!");
