@@ -135,11 +135,11 @@ Endpoint para abrir ordens de serviço!
 ### 2. **/serviceorder**
 
 #### Descrição:
-Endpoint para listar ordens de serviço
+Endpoint para listar ordens de serviço com suporte para filtros de data máxima, mínima e responsável 'assignee'
 Obs.: Collaborators apenas podem ver OS que eles mesmos abriram
 
 #### Requisição:
-**URL**: `/serviceorder`  
+**URL**: `/serviceorder?maxDate=2025-07-06&minDate=2025-07-01&assignee=name`  
 **Método**: `GET`
 
 **Resposta**

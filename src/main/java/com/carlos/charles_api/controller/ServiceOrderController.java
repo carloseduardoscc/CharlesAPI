@@ -5,6 +5,7 @@ import com.carlos.charles_api.dto.response.ServiceOrderDetailsDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderStatistcsDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderSummaryDTO;
 import com.carlos.charles_api.model.entity.ServiceOrder;
+import com.carlos.charles_api.queryfilters.ServiceOrderQueryFilter;
 import com.carlos.charles_api.service.ServiceOrderService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -56,8 +57,8 @@ public class ServiceOrderController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<ServiceOrderSummaryDTO>> listServiceOrders() {
-        List<ServiceOrderSummaryDTO> serviceOrders = service.listServiceOrders();
+    public ResponseEntity<List<ServiceOrderSummaryDTO>> listServiceOrders(@ModelAttribute ServiceOrderQueryFilter filter) {
+        List<ServiceOrderSummaryDTO> serviceOrders = service.listServiceOrders(filter);
         return ResponseEntity.ok(serviceOrders);
     }
 

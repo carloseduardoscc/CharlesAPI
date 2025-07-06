@@ -10,6 +10,7 @@ import com.carlos.charles_api.infra.pdf.PdfReportGenerator;
 import com.carlos.charles_api.model.entity.*;
 import com.carlos.charles_api.model.enums.Role;
 import com.carlos.charles_api.model.enums.SoStateType;
+import com.carlos.charles_api.queryfilters.ServiceOrderQueryFilter;
 import com.carlos.charles_api.repository.ServiceOrderRepository;
 import com.carlos.charles_api.repository.SoStateRepository;
 import com.carlos.charles_api.repository.WorkspaceRepository;
@@ -17,7 +18,12 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
+import static com.carlos.charles_api.model.specifications.ServiceOrderSpec.*;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -67,15 +73,21 @@ public class ServiceOrderService {
     }
 
     @Transactional
-    public List<ServiceOrderSummaryDTO> listServiceOrders() {
+    public List<ServiceOrderSummaryDTO> listServiceOrders(ServiceOrderQueryFilter filter) {
+        validateFilter(filter);
+
         User user = userService.getCurrentAuthenticatedUser();
         Workspace workspace = user.getWorkspace();
+        Specification<ServiceOrder> specification = filter.toSpecification();
 
         List<ServiceOrder> serviceOrders;
         if (user.getRole().equals(Role.COLLABORATOR)) {
-            serviceOrders = serviceOrderRepository.findByWorkspaceIdAndSolicitantId(workspace.getId(), user.getId());
+            serviceOrders = serviceOrderRepository.findAll(specification.
+                    and(hasWorkspaceId(workspace.getId())).
+                    and(hasSolicitantId(user.getId())));
         } else {
-            serviceOrders = serviceOrderRepository.findByWorkspaceId(workspace.getId());
+            serviceOrders = serviceOrderRepository.findAll(specification.
+                    and(hasWorkspaceId(workspace.getId())));
         }
 
         logger.atInfo().log("User {} buscou ordens de serviço no workspace {}", user.getIdentification(), workspace.getIdentification());
@@ -168,7 +180,18 @@ public class ServiceOrderService {
         );
     }
 
+
     // VALIDAÇÕES
+    private void validateFilter(ServiceOrderQueryFilter filter) {
+        if (
+                !ObjectUtils.isEmpty(filter.getMaxDate()) &&
+                !ObjectUtils.isEmpty(filter.getMinDate()) &&
+                filter.getMaxDate().isBefore(filter.getMinDate())
+        ) {
+            throw new BusinessRuleException("A data máxima não pode ser menor que a data mínima!");
+
+        }
+    }
 
     private void validateIfOsCanBeCompleted(User user, ServiceOrder so) {
         if (so.getAssignee() == null || !so.getAssignee().equals(user)) {
