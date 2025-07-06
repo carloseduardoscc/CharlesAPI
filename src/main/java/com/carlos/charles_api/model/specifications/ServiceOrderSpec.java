@@ -58,4 +58,13 @@ public class ServiceOrderSpec {
             return cb.equal(root.get("solicitant").get("id"), solicitantId);
         };
     }
+
+    public static Specification<ServiceOrder> hasCurrentStatus(SoStateType stateType) {
+        return (root, query, cb) -> {
+            if (ObjectUtils.isEmpty(stateType)) {
+                return null;
+            }
+            return cb.equal(root.get("currentState"), stateType);
+        };
+    }
 }

@@ -13,10 +13,6 @@ public record ContactRequestDTO(
         String name,
 
         @NotBlank(message = "O telefone é obrigatório")
-        @Pattern(
-                regexp = "\\+?\\d{1,3}\\s?\\(?\\d{2,3}\\)?\\s?\\d{4,5}-?\\d{4}",
-                message = "Informe um telefone válido (ex: +55 (11) 91234-5678)"
-        )
         String phone,
 
         @NotBlank(message = "O e-mail é obrigatório")
