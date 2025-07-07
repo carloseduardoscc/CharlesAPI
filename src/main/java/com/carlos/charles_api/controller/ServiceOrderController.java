@@ -1,6 +1,7 @@
 package com.carlos.charles_api.controller;
 
 import com.carlos.charles_api.dto.request.OpenServiceOrderRequestDTO;
+import com.carlos.charles_api.dto.request.OsDiagnosticDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderDetailsDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderStatistcsDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderSummaryDTO;
@@ -51,8 +52,8 @@ public class ServiceOrderController {
     }
 
     @PostMapping("/{id}/complete")
-    public ResponseEntity complete(@PathVariable Long id){
-        service.completeOs(id);
+    public ResponseEntity complete(@PathVariable Long id, @RequestBody OsDiagnosticDTO diagnosticDTO){
+        service.completeOs(id, diagnosticDTO);
         return ResponseEntity.ok("Ordem completado com sucesso!");
     }
 

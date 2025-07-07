@@ -9,7 +9,9 @@ public record ServiceOrderSummaryDTO(
         String description,
         SoStateType currentState,
         String collaboratorName,
-        String supporterName
+        String collaboratorEmail,
+        String supporterName,
+        String supporterEmail
 ) {
     public static ServiceOrderSummaryDTO fromEntity(ServiceOrder serviceOrder) {
         return new ServiceOrderSummaryDTO(
@@ -18,7 +20,9 @@ public record ServiceOrderSummaryDTO(
                 serviceOrder.getDescription(),
                 serviceOrder.getCurrentState(),
                 serviceOrder.getSolicitant() != null ? serviceOrder.getSolicitant().getFullName() : null,
-                serviceOrder.getAssignee() != null ? serviceOrder.getAssignee().getFullName() : null
-        );
+                serviceOrder.getSolicitant() != null ? serviceOrder.getSolicitant().getEmail() : null,
+                serviceOrder.getAssignee() != null ? serviceOrder.getAssignee().getFullName() : null,
+                serviceOrder.getAssignee() != null ? serviceOrder.getAssignee().getEmail() : null
+                );
     }
 }

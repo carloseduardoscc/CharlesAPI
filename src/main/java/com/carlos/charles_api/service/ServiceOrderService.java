@@ -1,6 +1,7 @@
 package com.carlos.charles_api.service;
 
 import com.carlos.charles_api.dto.request.OpenServiceOrderRequestDTO;
+import com.carlos.charles_api.dto.request.OsDiagnosticDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderDetailsDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderStatistcsDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderSummaryDTO;
@@ -147,11 +148,10 @@ public class ServiceOrderService {
         so.setCurrentState(SoStateType.CANCELED);
 
         serviceOrderRepository.save(so);
-        soStateRepository.save(cancelState);
     }
 
     @Transactional
-    public void completeOs(Long soId) {
+    public void completeOs(Long soId, OsDiagnosticDTO diagnosticDTO) {
         User user = userService.getCurrentAuthenticatedUser();
         ServiceOrder so = findOsAndValidateIfNull(soId);
         validateOsAcessByWorkspace(user, so);
@@ -159,10 +159,10 @@ public class ServiceOrderService {
 
         SoState completeState = new SoState(null, LocalDateTime.now(), SoStateType.COMPLETED, so);
         so.getStates().add(completeState);
+        so.setDiagnostic(diagnosticDTO.diagnostic());
         so.setCurrentState(SoStateType.COMPLETED);
 
         serviceOrderRepository.save(so);
-        soStateRepository.save(completeState);
     }
 
     @Transactional

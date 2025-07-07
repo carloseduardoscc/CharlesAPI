@@ -146,12 +146,14 @@ Obs.: Collaborators apenas podem ver OS que eles mesmos abriram
 ```json
 [
   {
-    "id": 4,
-    "soCode": "CH-00004",
-    "description": "Impressora não funciona",
+    "id": 3,
+    "soCode": "CH-00005",
+    "description": "Interferência na rede",
     "currentState": "CANCELED",
-    "collaboratorName": "Collaborator3 Name",
-    "supporterName": "Supporter2 Name"
+    "collaboratorName": "Collaborator1 Name",
+    "collaboratorEmail": "collaborator1@example.com",
+    "supporterName": "Supporter1 Name",
+    "supporterEmail": "supporter1@example.com"
   }
 ]
 ```
@@ -251,6 +253,13 @@ Usuário se responsabilizou e ela ainda está em andamento
 #### Requisição:
 **URL**: `/serviceorder/{id}/complete`  
 **Método**: `POST`
+
+**Body**:
+```json
+{
+  "diagnostic": "foi trocado a fonte"
+}
+```
 
 ### 8. **/serviceorder/statistcs**
 

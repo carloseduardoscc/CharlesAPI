@@ -47,6 +47,7 @@ public class PdfReportGenerator {
 
             addRow(infoTable, "Código", so.getSoCode(), tableHeaderFont, textFont, borderColor, headerColor);
             addRow(infoTable, "Descrição", so.getDescription(), tableHeaderFont, textFont, borderColor, null);
+            addRow(infoTable, "Diagnóstico", so.getDiagnostic(), tableHeaderFont, textFont, borderColor, null);
             addRow(infoTable, "Último estado", so.getCurrentState().name(), tableHeaderFont, textFont, borderColor, null);
             addRow(infoTable, "Workspace", so.getWorkspace().getIdentification(), tableHeaderFont, textFont, borderColor, null);
             addRow(infoTable, "Solicitante", so.getSolicitant().getFullName(), tableHeaderFont, textFont, borderColor, null);
