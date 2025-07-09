@@ -9,8 +9,11 @@ import com.carlos.charles_api.exceptions.BusinessRuleException;
 import com.carlos.charles_api.exceptions.ResourceNotFoundException;
 import com.carlos.charles_api.infra.pdf.PdfReportGenerator;
 import com.carlos.charles_api.model.entity.*;
+import com.carlos.charles_api.model.enums.ReportType;
 import com.carlos.charles_api.model.enums.Role;
 import com.carlos.charles_api.model.enums.SoStateType;
+import com.carlos.charles_api.queryfilters.DownloadOsListReportFilter;
+import com.carlos.charles_api.queryfilters.MinDateMaxDateFilter;
 import com.carlos.charles_api.queryfilters.ServiceOrderQueryFilter;
 import com.carlos.charles_api.repository.ServiceOrderRepository;
 import com.carlos.charles_api.repository.SoStateRepository;
@@ -19,6 +22,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -27,6 +31,7 @@ import static com.carlos.charles_api.model.specifications.ServiceOrderSpec.*;
 
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -112,15 +117,29 @@ public class ServiceOrderService {
     }
 
     @Transactional
-    public byte[] generateSoReport(Long soId) {
+    public byte[] generateSoDetailedReport(Long soId) {
         User user = userService.getCurrentAuthenticatedUser();
         ServiceOrder so = findOsAndValidateIfNull(soId);
         validateOsAcessByWorkspace(user, so);
         validateOsAcessByUserOpenOs(user, so);
         validateOsIsReportable(so);
-        return pdfReportGenerator.generateServiceOrderReport(so);
+        return pdfReportGenerator.generateDetailedOsReport(so);
     }
 
+    @Transactional
+    public byte[] generateSoReport(DownloadOsListReportFilter filter) {
+        User actualUser = userService.getCurrentAuthenticatedUser();
+        validateActualUserReportGenerationPermission(actualUser);
+
+        if (filter.getReportType() == null) {filter.setReportType(ReportType.ALL);}
+
+        List<ServiceOrder> serviceOrders = serviceOrderRepository.findAll(filter.toSpecification().and(hasWorkspaceId(actualUser.getWorkspace().getId())));
+        List<ServiceOrder> orderedServiceOrders = serviceOrders.stream()
+                .sorted(Comparator.comparing(so -> so.getStates().getFirst().getDateTime()))
+                .collect(Collectors.toList());
+
+        return pdfReportGenerator.generateOsListReport(orderedServiceOrders, filter.getReportType());
+    }
 
     @Transactional
     public void assignOs(Long soId) {
@@ -166,20 +185,19 @@ public class ServiceOrderService {
     }
 
     @Transactional
-    public ServiceOrderStatistcsDTO serviceOrderStatistcsDTO() {
+    public ServiceOrderStatistcsDTO statistcs(MinDateMaxDateFilter filter) {
         User user = userService.getCurrentAuthenticatedUser();
         Workspace workspace = user.getWorkspace();
-
+        Specification<ServiceOrder> specification = filter.toSpecification().and(hasWorkspaceId(workspace.getId()));
         return new ServiceOrderStatistcsDTO(
-                serviceOrderRepository.countByWorkspaceAndCurrentStateIsIn(workspace, List.of(SoStateType.OPEN)),
-                serviceOrderRepository.countByWorkspaceAndCurrentStateIsIn(workspace, List.of(SoStateType.ASSIGNED)),
-                serviceOrderRepository.countByWorkspaceAndCurrentStateIsIn(workspace, List.of(SoStateType.CANCELED)),
-                serviceOrderRepository.countByWorkspaceAndCurrentStateIsIn(workspace, List.of(SoStateType.COMPLETED)),
-                serviceOrderRepository.countByWorkspaceAndCurrentStateIsIn(workspace, List.of(SoStateType.CANCELED, SoStateType.COMPLETED)),
-                serviceOrderRepository.countByWorkspace(workspace)
+                serviceOrderRepository.count(specification.and(hasCurrentStatus(List.of(SoStateType.OPEN)))),
+                serviceOrderRepository.count(specification.and(hasCurrentStatus(List.of(SoStateType.ASSIGNED)))),
+                serviceOrderRepository.count(specification.and(hasCurrentStatus(List.of(SoStateType.CANCELED)))),
+                serviceOrderRepository.count(specification.and(hasCurrentStatus(List.of(SoStateType.COMPLETED)))),
+                serviceOrderRepository.count(specification.and(hasCurrentStatus(List.of(SoStateType.CANCELED, SoStateType.COMPLETED)))),
+                serviceOrderRepository.count(specification)
         );
     }
-
 
     // VALIDAÇÕES
     private void validateFilter(ServiceOrderQueryFilter filter) {
@@ -276,4 +294,9 @@ public class ServiceOrderService {
         return codigo;
     }
 
+    private void validateActualUserReportGenerationPermission(User actualUser) {
+        if (actualUser.getRole().equals(Role.COLLABORATOR)){
+            throw new BusinessRuleException("Colaboradores não podem gerar relatórios detalhados das ordens de serviço que não faz parte!");
+        }
+    }
 }

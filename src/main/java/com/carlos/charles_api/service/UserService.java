@@ -5,7 +5,6 @@ import com.carlos.charles_api.dto.response.NewParticipantResponseDTO;
 import com.carlos.charles_api.dto.response.ParticipantDTO;
 import com.carlos.charles_api.exceptions.BusinessRuleException;
 import com.carlos.charles_api.exceptions.ResourceNotFoundException;
-import com.carlos.charles_api.model.entity.ServiceOrder;
 import com.carlos.charles_api.model.entity.User;
 import com.carlos.charles_api.model.entity.Workspace;
 import com.carlos.charles_api.model.enums.Role;
@@ -71,13 +70,28 @@ public class UserService {
         User userToDeactivate = findUserandValidateIfNull(userId);
 
         validateUserAcessByWorkspace(thisUser, userToDeactivate);
-        validateAutoDeactivation(thisUser, userToDeactivate);
-        validateDeactivateParticipant(thisUser, userToDeactivate);
+        validateAutoActivation(thisUser, userToDeactivate);
+        validateParticipantStatusChange(thisUser, userToDeactivate);
 
         userToDeactivate.setEnabled(false);
         userRepository.save(userToDeactivate);
 
-        logger.atInfo().log( "O " + thisUser.getIdentification() + " do workspace " + thisUser.getWorkspace().getIdentification() + " listou os participantes de seu workspace");
+        logger.atInfo().log("O " + thisUser.getIdentification() + " do workspace " + thisUser.getWorkspace().getIdentification() + " desativou " + userToDeactivate.getIdentification() + " de seu workspace");
+    }
+
+    @Transactional
+    public void activate(Long userId) {
+        User thisUser = getCurrentAuthenticatedUser();
+        User userToActivate = findUserandValidateIfNull(userId);
+
+        validateUserAcessByWorkspace(thisUser, userToActivate);
+        validateAutoActivation(thisUser, userToActivate);
+        validateParticipantStatusChange(thisUser, userToActivate);
+
+        userToActivate.setEnabled(true);
+        userRepository.save(userToActivate);
+
+        logger.atInfo().log("O " + thisUser.getIdentification() + " do workspace " + thisUser.getWorkspace().getIdentification() + " reativou " + userToActivate.getIdentification() + " de seu workspace");
     }
 
     // VALIDAÇÕES
@@ -87,7 +101,7 @@ public class UserService {
         return user;
     }
 
-    private void validateAutoDeactivation(User thisUser, User userToDeactivate) {
+    private void validateAutoActivation(User thisUser, User userToDeactivate) {
         if (thisUser.equals(userToDeactivate)) {
             throw new BusinessRuleException("Você não pode se desativar!");
         }
@@ -101,17 +115,17 @@ public class UserService {
         }
     }
 
-    private static void validateDeactivateParticipant(User thisUser, User userToDeactivate) {
+    private static void validateParticipantStatusChange(User thisUser, User userToDeactivate) {
         if (thisUser.getRole().equals(Role.OWNER)) {
             if (!List.of(Role.SUPPORTER, Role.COLLABORATOR, Role.ADMIN).contains(userToDeactivate.getRole())) {
-                throw new BusinessRuleException("Owners só podem desativar administradores, suportes e colaboradores! Você tentou desativar um " + userToDeactivate.getRole().name());
+                throw new BusinessRuleException("Owners só podem mudar status de administradores, suportes e colaboradores! Você tentou alterar um " + userToDeactivate.getRole().name());
             }
         } else if (thisUser.getRole().equals(Role.ADMIN)) {
             if (!List.of(Role.SUPPORTER, Role.COLLABORATOR).contains(userToDeactivate.getRole())) {
-                throw new BusinessRuleException("Admins só podem desativar suportes e colaboradores! Você tentou desativar um " + userToDeactivate.getRole().name());
+                throw new BusinessRuleException("Admins só podem alterar status de suportes e colaboradores! Você tentou alterar um " + userToDeactivate.getRole().name());
             }
         } else {
-            throw new BusinessRuleException("Seu usuário " + thisUser.getRole().name() + " não tem permissão para desativar um participante do workspace!");
+            throw new BusinessRuleException("Seu usuário " + thisUser.getRole().name() + " não tem permissão para alterar status de um participante do workspace!");
         }
     }
 

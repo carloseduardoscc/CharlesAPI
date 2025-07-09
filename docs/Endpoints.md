@@ -22,7 +22,9 @@
   - [POST /serviceorder/{id}/statistcs](#8-serviceorderstatistcs)
 - [/participants](#participants)
   - [POST /participants](#1-participants)
-  - [POST /participants](#1-participants)
+  - [GET /participants](#2-participants)
+  - [POST /participants/{id}/deactivate](#3-participantsiddeactivate)
+  - [POST /participants/{id}/activate](#4-participantsidactivate)
 
 ## /contactRequest
 
@@ -221,6 +223,17 @@ Endpoint para fazer download do relatório em PDF
 **URL**: `/serviceorder/{id}/report`  
 **Método**: `GET`
 
+### 4. **/serviceorder/report**
+
+#### Descrição:
+Endpoint para fazer download de um relatório de todas as OS do workspace, com filtros de data e tipo de relatório.
+Todos menos o collaborator podem ter acesso a esse recurso:
+reportType: ALL, BY_ASSIGNEE, BY_SOLICITANT, BY_STATE
+
+#### Requisição:
+**URL**: ` /serviceorder/report?reportType=ALL&minDate=2025-07-01&maxDate=2025-08-01`  
+**Método**: `GET`
+
 ### 5. **/serviceorder/{id}/assign**
 
 #### Descrição:
@@ -264,10 +277,10 @@ Usuário se responsabilizou e ela ainda está em andamento
 ### 8. **/serviceorder/statistcs**
 
 #### Descrição:
-Endpoint para gerar estatísticas sobre as ordens de serviço
+Endpoint para gerar estatísticas sobre as ordens de serviço com filtro de data
 
 #### Requisição:
-**URL**: `/serviceorder/statistcs`  
+**URL**: `/serviceorder/statistcs?maxDate=2025-07-06&minDate=2025-07-01`  
 **Método**: `GET`
 
 **Resposta**
@@ -318,7 +331,7 @@ Outros cargos não podem adicionar participantes
 }
 ```
 
-### 1. **/participants**
+### 2. **/participants**
 
 #### Descrição:
 Endpoint para listar participants do próprio workspace
@@ -346,17 +359,20 @@ Endpoint para listar participants do próprio workspace
   }
 ]
 ```
-### 1. **/participants**
+### 3. **/participants/{id}/deactivate**
 
 #### Descrição:
-Endpoint para desativar um participante:
-
-Owner pode adicionar admin, supporter e collaborator,
-
-Admin pode adicionar supporter e collaborator
-
-Outros cargos não podem adicionar participantes
+Endpoint para desativar um participante
 
 #### Requisição:
 **URL**: `/participants/{id}/deactivate`  
+**Método**: `POST`
+
+### 4. **/participants/{id}/activate**
+
+#### Descrição:
+Endpoint para reativar um participante
+
+#### Requisição:
+**URL**: `/participants/{id}/activate`  
 **Método**: `POST`

@@ -39,6 +39,12 @@ public class UserController {
     @PostMapping("/{id}/deactivate")
     public ResponseEntity deactivate(@PathVariable Long id) {
         userService.deactivate(id);
-        return ResponseEntity.ok("Participant desativado com sucesso!");
+        return ResponseEntity.ok("Participante desativado com sucesso!");
+    }
+
+    @PostMapping("/{id}/activate")
+    public ResponseEntity activate(@PathVariable Long id) {
+        userService.activate(id);
+        return ResponseEntity.ok("Participante ativado com sucesso!");
     }
 }

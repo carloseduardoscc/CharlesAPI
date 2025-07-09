@@ -166,12 +166,12 @@ public class ExampleDataLoader implements CommandLineRunner
         so3.setCurrentState(SoStateType.OPEN);
 
         ServiceOrder so5 = new ServiceOrder();
-        so3.setSoCode("CH-00005");
-        so3.setDescription("Interferência na rede");
-        so3.setWorkspace(workspace1);
-        so3.setAssignee(supporter1);
-        so3.setSolicitant(collaborator1);
-        so3.setCurrentState(SoStateType.CANCELED);
+        so5.setSoCode("CH-00005");
+        so5.setDescription("Interferência na rede");
+        so5.setWorkspace(workspace1);
+        so5.setAssignee(supporter1);
+        so5.setSolicitant(collaborator1);
+        so5.setCurrentState(SoStateType.CANCELED);
 
         ServiceOrder so4 = new ServiceOrder();
         so4.setSoCode("CH-00004");
@@ -182,7 +182,7 @@ public class ExampleDataLoader implements CommandLineRunner
         so4.setCurrentState(SoStateType.CANCELED);
         so4.setDiagnostic("Usuário pediu para cancelar");
 
-        soRepo.saveAll(List.of(so1, so2, so3, so4, so5));
+        soRepo.saveAll(List.of(so1, so2, so3, so5, so4));
 
         // Create service order states (history)
         // SO1 states

@@ -5,8 +5,9 @@ import com.carlos.charles_api.dto.request.OsDiagnosticDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderDetailsDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderStatistcsDTO;
 import com.carlos.charles_api.dto.response.ServiceOrderSummaryDTO;
-import com.carlos.charles_api.model.entity.ServiceOrder;
+import com.carlos.charles_api.queryfilters.MinDateMaxDateFilter;
 import com.carlos.charles_api.queryfilters.ServiceOrderQueryFilter;
+import com.carlos.charles_api.queryfilters.DownloadOsListReportFilter;
 import com.carlos.charles_api.service.ServiceOrderService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -70,20 +71,35 @@ public class ServiceOrderController {
     }
 
     @GetMapping("/statistcs")
-    public ResponseEntity<ServiceOrderStatistcsDTO> serviceOrderDetails() {
-        ServiceOrderStatistcsDTO response = service.serviceOrderStatistcsDTO();
+    public ResponseEntity<ServiceOrderStatistcsDTO> statistics(@ModelAttribute MinDateMaxDateFilter dateFilter) {
+        ServiceOrderStatistcsDTO response = service.statistcs(dateFilter);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{so_id}/report")
-    public ResponseEntity<byte[]> downloadReport(@PathVariable Long so_id) {
-        byte[] pdf = service.generateSoReport(so_id);
+    public ResponseEntity<byte[]> downloadOsDetailsReport(@PathVariable Long so_id) {
+        byte[] pdf = service.generateSoDetailedReport(so_id);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDisposition(ContentDisposition
                 .builder("attachment")
                 .filename("relatorio_os_.pdf")
+                .build());
+
+        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/report")
+    public ResponseEntity<byte[]> downloadOsListReport(@ModelAttribute DownloadOsListReportFilter filter) {
+        byte[] pdf = service.generateSoReport(filter);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition
+                .builder("attachment")
+                .filename("relatorio.pdf")
                 .build());
 
         return new ResponseEntity<>(pdf, headers, HttpStatus.OK);

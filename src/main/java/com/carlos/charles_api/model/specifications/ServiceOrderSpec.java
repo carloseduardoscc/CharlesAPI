@@ -9,6 +9,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public class ServiceOrderSpec {
     public static Specification<ServiceOrder> hasAssigneeName(String assigneeName) {
@@ -41,6 +42,35 @@ public class ServiceOrderSpec {
     }
 
 
+    public static Specification<ServiceOrder> hasDateBefore(LocalDate date) {
+        return (root, query, cb) -> {
+            if (ObjectUtils.isEmpty(date)) {
+                return null;
+            }
+
+            Join<ServiceOrder, SoState> states = root.join("states");
+            return cb.and(
+                    cb.equal(states.get("type"), SoStateType.OPEN),
+                    cb.lessThanOrEqualTo(states.get("dateTime"), date.atTime(LocalTime.MAX))
+            );
+        };
+    }
+
+    public static Specification<ServiceOrder> hasDateAfter(LocalDate date) {
+        return (root, query, cb) -> {
+            if (ObjectUtils.isEmpty(date)) {
+                return null;
+            }
+
+            Join<ServiceOrder, SoState> states = root.join("states");
+            return cb.and(
+                    cb.equal(states.get("type"), SoStateType.OPEN),
+                    cb.greaterThanOrEqualTo(states.get("dateTime"), date.atStartOfDay())
+            );
+        };
+    }
+
+
     public static Specification<ServiceOrder> hasWorkspaceId(Long workspaceId) {
         return (root, query, cb) -> {
             if (ObjectUtils.isEmpty(workspaceId)) {
@@ -59,12 +89,12 @@ public class ServiceOrderSpec {
         };
     }
 
-    public static Specification<ServiceOrder> hasCurrentStatus(SoStateType stateType) {
+    public static Specification<ServiceOrder> hasCurrentStatus(List<SoStateType> stateTypes) {
         return (root, query, cb) -> {
-            if (ObjectUtils.isEmpty(stateType)) {
+            if (ObjectUtils.isEmpty(stateTypes)) {
                 return null;
             }
-            return cb.equal(root.get("currentState"), stateType);
+            return root.get("currentState").in(stateTypes);
         };
     }
 }
