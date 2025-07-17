@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Charles² - Configurações</title>
+  <link rel="stylesheet" href="../css/settings.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="Home.html" style="color: white; text-decoration: none; display: flex; align-items: center;">
+        <span class="material-icons">arrow_back</span>Voltar
+      </a>
+    </div>
+    <div class="header-right">
+      <span class="material-icons">save</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <main class="main-content">
+      <h1>Configurações</h1>
+      
+      <section class="settings-section">
+        <h2>Preferências</h2>
+        <div class="setting-item">
+          <label>Tema Escuro</label>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        
+        <div class="setting-item">
+          <label>Notificações por Email</label>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </section>
+      
+      <section class="settings-section">
+        <h2>Segurança</h2>
+        <div class="setting-item">
+          <label>Autenticação em Dois Fatores</label>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        
+        <button class="btn">Alterar Senha</button>
+      </section>
+      
+      <section class="settings-section danger-zone">
+        <h2>Zona de Perigo</h2>
+        <button class="btn danger-btn">Excluir Minha Conta</button>
+        <p class="warning">Esta ação não pode ser desfeita. Todos os seus dados serão permanentemente removidos.</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

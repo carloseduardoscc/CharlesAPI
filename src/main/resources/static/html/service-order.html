@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Chamados Abertos</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../css/service-order.css">
+</head>
+<div id="completeModal" class="modal-overlay">
+    <div class="modal-box">
+        <h2>Finalizar OS</h2>
+        <p>Descreva o diagnóstico da ordem de serviço:</p>
+        <textarea id="diagnosticInput" rows="5" placeholder="Ex: Impressora com rolete desgastado, substituído..." required></textarea>
+        <div class="modal-actions">
+            <button id="cancelModal" class="modal-btn cancel">Cancelar</button>
+            <button id="confirmComplete" class="modal-btn confirm">Concluir</button>
+        </div>
+    </div>
+</div>
+
+
+<body>
+<div class="header">
+    <a href="Home.html" style="color: white; text-decoration: none; display: flex; align-items: center;">
+        <span class="material-icons">arrow_back</span>Voltar
+    </a>
+    <div class="search-bar">
+        <span class="material-icons">search</span>
+        <input type="text" placeholder="Pesquisar chamados...">
+    </div>
+</div>
+
+<div class="content">
+    <div class="page-title">
+        <h1>Lista de Chamados Abertos</h1>
+        <a href="open-ticket.html" class="add-button">
+            <span class="material-icons">add_circle_outline</span>
+            <span>Novo Chamado</span>
+        </a>
+    </div>
+
+    <div class="controls-row">
+        <div class="show-entries">
+            <span>Mostrar</span>
+            <select id="entriesSelect">
+                <option value="10">10</option>
+                <option value="15" selected>15</option>
+                <option value="20">20</option>
+            </select>
+            <span>entradas</span>
+        </div>
+    </div>
+
+    <div class="database-table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>Número da OS</th>
+                <th>Nome do Requisitante</th>
+                <th>Responsável</th>
+                <th>Status</th>
+                <th>Minha OS</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+            <!-- Dados serão preenchidos via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="module" src="../javascript/main-service-order.js"></script>
+</body>
+</html>

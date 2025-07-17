@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Charles² - Abrir Chamado</title>
+  <link rel="stylesheet" href="../css/open-ticket.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+<header class="header">
+  <div class="header-left">
+    <a href="Home.html" style="color: white; text-decoration: none; display: flex; align-items: center;">
+      <span class="material-icons">arrow_back</span>Voltar
+    </a>
+  </div>
+  <div class="header-right">
+    <span class="material-icons">help</span>
+  </div>
+</header>
+
+<div class="container">
+  <main class="main-content">
+    <h1>Abrir Novo Chamado</h1>
+
+    <form id="ticket-form" class="form-section">
+      <h2><span class="material-icons">description</span> Descrição Detalhada</h2>
+
+      <div class="form-group">
+        <label for="ticket-description">Descreva o problema ou solicitação*</label>
+        <textarea id="ticket-description" rows="6" placeholder="Forneça o máximo de detalhes possível para ajudar na resolução..." required></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn cancel-btn" onclick="window.location.href='Home.html'">Cancelar</button>
+        <button type="submit" class="btn submit-btn">Abrir Chamado</button>
+      </div>
+    </form>
+  </main>
+</div>
+
+<script type="module" src="../javascript/main-open-ticket.js"></script>
+</body>
+</html>

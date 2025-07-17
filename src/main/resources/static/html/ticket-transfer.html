@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Charles² - Transferir Ticket</title>
+  <link rel="stylesheet" href="../css/ticket-transfer.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="Home.html" style="color: white; text-decoration: none; display: flex; align-items: center;">
+        <span class="material-icons">arrow_back</span>Voltar
+      </a>
+    </div>
+    <div class="header-right">
+      <span class="material-icons">history</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <main class="main-content">
+      <h1>Transferir Ticket</h1>
+      
+      <div class="ticket-info">
+        <div class="ticket-header">
+          <h2>Ticket #T2023-0158</h2>
+          <span class="status open">Aberto</span>
+        </div>
+        <p><strong>Assunto:</strong> Problema com acesso ao sistema financeiro</p>
+        <p><strong>Solicitante:</strong> Maria Oliveira (Departamento Financeiro)</p>
+        <p><strong>Data de abertura:</strong> 15/11/2023 14:30</p>
+      </div>
+      
+      <form class="transfer-form">
+        <div class="form-group">
+          <label for="transfer-reason">Motivo da Transferência</label>
+          <select id="transfer-reason" required>
+            <option value="">Selecione um motivo...</option>
+            <option>Área técnica incorreta</option>
+            <option>Necessidade de especialista</option>
+            <option>Redistribuição de carga</option>
+            <option>Outro motivo</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="transfer-to">Transferir Para</label>
+          <select id="transfer-to" required>
+            <option value="">Selecione um responsável...</option>
+            <optgroup label="Suporte Nível 1">
+              <option>Carlos Silva</option>
+              <option>Ana Paula</option>
+            </optgroup>
+            <optgroup label="Suporte Nível 2">
+              <option>Roberto Almeida</option>
+              <option>Fernanda Costa</option>
+            </optgroup>
+            <optgroup label="Especialistas">
+              <option>José Financeiro (Sistema Financeiro)</option>
+              <option>Patrícia RH (Sistema Pessoal)</option>
+            </optgroup>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="transfer-comments">Comentários Adicionais</label>
+          <textarea id="transfer-comments" rows="4" placeholder="Adicione informações relevantes para o novo responsável..."></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn cancel-btn">Cancelar</button>
+          <button type="submit" class="btn transfer-btn">Transferir Ticket</button>
+        </div>
+      </form>
+      
+      <div class="transfer-history">
+        <h3>Histórico de Transferências</h3>
+        <div class="history-empty">
+          <span class="material-icons">info</span>
+          <p>Este ticket ainda não foi transferido.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

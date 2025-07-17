@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Charles² - C-2GL Chat</title>
+  <link rel="stylesheet" href="../css/c2gl-chat.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="Home.html" style="color: white; text-decoration: none; display: flex; align-items: center;">
+        <span class="material-icons">arrow_back</span>Voltar
+      </a>
+    </div>
+    <div class="header-right">
+      <span class="material-icons">info</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <main class="main-content">
+      <div class="chat-header">
+        <div class="chat-title">
+          <div class="chat-icon">
+            <span class="material-icons">smart_toy</span>
+          </div>
+          <h1>C-2GL Assistant</h1>
+        </div>
+        <p>Sistema Inteligente de Suporte</p>
+      </div>
+      
+      <div class="chat-container">
+        <div class="chat-messages" id="chatMessages">
+          <!-- Mensagens serão adicionadas dinamicamente via JavaScript -->
+        </div>
+        
+        <div class="chat-input">
+          <input type="text" id="userInput" placeholder="Digite sua mensagem...">
+          <button class="send-btn" id="sendBtn">
+            <span class="material-icons">send</span>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Elementos do DOM
+      const chatMessages = document.getElementById('chatMessages');
+      const userInput = document.getElementById('userInput');
+      const sendBtn = document.getElementById('sendBtn');
+      
+      // Estado da conversa
+      let conversationState = {
+        currentFlow: null,
+        collectedData: {}
+      };
+      
+      // Fluxos de conversa
+      const conversationFlows = {
+        OPEN_TICKET: {
+          steps: [
+            {
+              question: "Qual é o departamento relacionado ao seu problema?",
+              quickReplies: ["TI", "Financeiro", "RH", "Outro"],
+              field: "department"
+            },
+            {
+              question: "Por favor, descreva brevemente o problema:",
+              field: "problemDescription"
+            },
+            {
+              question: "Qual a prioridade do seu chamado?",
+              quickReplies: ["Baixa", "Média", "Alta", "Urgente"],
+              field: "priority"
+            },
+            {
+              question: (data) => `Ótimo! Vou abrir um chamado no departamento ${data.department} com prioridade ${data.priority}. Deseja confirmar?`,
+              quickReplies: ["Sim, confirmar", "Não, cancelar"],
+              field: "confirmation"
+            }
+          ],
+          finalAction: (data) => {
+            if (data.confirmation === "Sim, confirmar") {
+              return {
+                message: `Chamado criado com sucesso! Número do protocolo: #${Math.floor(1000 + Math.random() * 9000)}. Um técnico entrará em contato em breve.`,
+                quickReplies: ["Acompanhar chamado", "Novo chamado", "Voltar ao início"]
+              };
+            }
+            return {
+              message: "Processo de abertura de chamado cancelado. Como posso te ajudar?",
+              quickReplies: ["Abrir chamado", "Consultar chamados", "Outro assunto"]
+            };
+          }
+        },
+        KNOWLEDGE_BASE: {
+          steps: [
+            {
+              question: "Sobre qual tópico você precisa de ajuda?",
+              quickReplies: ["Configurações", "Relatórios", "Integrações", "Outro"],
+              field: "topic"
+            },
+            {
+              question: (data) => `O que você gostaria de saber sobre ${data.topic}?`,
+              field: "question"
+            }
+          ],
+          finalAction: (data) => {
+            const answers = {
+              "Configurações": "Você pode acessar as configurações pelo menu principal > Configurações. Lá você encontra todas as opções de personalização do sistema.",
+              "Relatórios": "Os relatórios estão disponíveis na seção 'Relatórios' do menu. Você pode gerar relatórios personalizados ou usar os modelos pré-definidos.",
+              "Integrações": "O Charles² oferece integração com diversos sistemas. Acesse 'Configurações' > 'Integrações' para configurar.",
+              "Outro": "Para mais informações, consulte nossa documentação ou entre em contato com o suporte técnico."
+            };
+            
+            return {
+              message: answers[data.topic] || "Aqui está a informação que encontrei sobre o assunto...",
+              quickReplies: ["Preciso de mais ajuda", "Resolver meu problema", "Voltar ao início"]
+            };
+          }
+        }
+      };
+      
+      // Base de conhecimento para respostas rápidas
+      const quickResponses = {
+        "saudacao": "Olá! Sou o C-2GL, assistente virtual do sistema Charles². Como posso te ajudar hoje?",
+        "abrir chamado": "Claro! Vou te guiar no processo de abertura de chamado.",
+        "consultar chamados": "Você pode consultar seus chamados na seção 'Meus Chamados'. Deseja ajuda com algo específico?",
+        "configuracoes": "As configurações do sistema podem ser acessadas pelo menu principal. Qual configuração você precisa ajustar?",
+        "sair": "Até logo! Se precisar de algo mais, estarei aqui para ajudar.",
+        "ajuda": "Posso te ajudar com: abertura de chamados, consulta de informações, configurações do sistema. Sobre o que você precisa?",
+        "default": "Desculpe, não entendi. Poderia reformular sua pergunta?"
+      };
+      
+      // Inicializa o chat
+      addBotMessage(quickResponses["saudacao"], ["Abrir chamado", "Consultar chamados", "Ajuda"]);
+      
+      // Event listeners
+      sendBtn.addEventListener('click', sendMessage);
+      userInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+      });
+      
+      // Função para enviar mensagem
+      function sendMessage() {
+        const message = userInput.value.trim();
+        if (message === '') return;
+        
+        addUserMessage(message);
+        userInput.value = '';
+        
+        // Processar a mensagem do usuário
+        processUserMessage(message);
+      }
+      
+      // Função para processar a mensagem do usuário
+      function processUserMessage(message) {
+        const lowerMessage = message.toLowerCase();
+        
+        // Verificar se está em um fluxo de conversa
+        if (conversationState.currentFlow) {
+          handleConversationFlow(message);
+          return;
+        }
+        
+        // Respostas rápidas
+        if (lowerMessage.includes('oi') || lowerMessage.includes('olá') || lowerMessage.includes('ola')) {
+          addBotMessage(quickResponses["saudacao"], ["Abrir chamado", "Consultar chamados", "Ajuda"]);
+        } 
+        else if (lowerMessage.includes('chamado') || lowerMessage.includes('problema') || lowerMessage.includes('suporte')) {
+          startConversationFlow('OPEN_TICKET');
+        }
+        else if (lowerMessage.includes('ajuda') || lowerMessage.includes('ajude')) {
+          addBotMessage(quickResponses["ajuda"], ["Abrir chamado", "Consultar chamados", "Configurações"]);
+        }
+        else if (lowerMessage.includes('configuração') || lowerMessage.includes('configuracoes')) {
+          addBotMessage(quickResponses["configuracoes"], ["Permissões", "Integrações", "Aparência"]);
+        }
+        else if (lowerMessage.includes('sair') || lowerMessage.includes('tchau')) {
+          addBotMessage(quickResponses["sair"]);
+        }
+        else {
+          // Se não reconhecer, tentar buscar na base de conhecimento
+          setTimeout(() => {
+            addBotMessage(quickResponses["default"], ["Abrir chamado", "Consultar chamados", "Ajuda"]);
+          }, 1000);
+        }
+      }
+      
+      // Função para iniciar um fluxo de conversa
+      function startConversationFlow(flowName) {
+        conversationState.currentFlow = flowName;
+        conversationState.currentStep = 0;
+        conversationState.collectedData = {};
+        
+        const flow = conversationFlows[flowName];
+        const currentStep = flow.steps[0];
+        
+        if (typeof currentStep.question === 'function') {
+          addBotMessage(currentStep.question(conversationState.collectedData), currentStep.quickReplies);
+        } else {
+          addBotMessage(currentStep.question, currentStep.quickReplies);
+        }
+      }
+      
+      // Função para lidar com o fluxo de conversa
+      function handleConversationFlow(message) {
+        const flow = conversationFlows[conversationState.currentFlow];
+        const currentStep = flow.steps[conversationState.currentStep];
+        
+        // Armazenar a resposta do usuário
+        conversationState.collectedData[currentStep.field] = message;
+        
+        // Avançar para o próximo passo ou finalizar
+        if (conversationState.currentStep < flow.steps.length - 1) {
+          conversationState.currentStep++;
+          const nextStep = flow.steps[conversationState.currentStep];
+          
+          setTimeout(() => {
+            if (typeof nextStep.question === 'function') {
+              addBotMessage(nextStep.question(conversationState.collectedData), nextStep.quickReplies);
+            } else {
+              addBotMessage(nextStep.question, nextStep.quickReplies);
+            }
+          }, 1000);
+        } else {
+          // Finalizar o fluxo
+          setTimeout(() => {
+            const result = flow.finalAction(conversationState.collectedData);
+            addBotMessage(result.message, result.quickReplies);
+            conversationState.currentFlow = null;
+          }, 1500);
+        }
+      }
+      
+      // Função para adicionar mensagem do usuário
+      function addUserMessage(text) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message user-message';
+        
+        const time = getCurrentTime();
+        
+        messageDiv.innerHTML = `
+          <div class="message-content">
+            <div class="message-text">${text}</div>
+            <div class="message-time">${time}</div>
+          </div>
+        `;
+        
+        chatMessages.appendChild(messageDiv);
+        scrollToBottom();
+      }
+      
+      // Função para adicionar mensagem do bot
+      function addBotMessage(text, quickReplies = null) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message bot-message';
+        
+        const time = getCurrentTime();
+        
+        let quickRepliesHTML = '';
+        if (quickReplies && quickReplies.length > 0) {
+          quickRepliesHTML = '<div class="quick-replies">';
+          quickReplies.forEach(reply => {
+            quickRepliesHTML += `<button class="quick-reply">${reply}</button>`;
+          });
+          quickRepliesHTML += '</div>';
+        }
+        
+        messageDiv.innerHTML = `
+          <div class="message-avatar">
+            <span class="material-icons">smart_toy</span>
+          </div>
+          <div class="message-content">
+            <div class="message-text">${text}</div>
+            ${quickRepliesHTML}
+            <div class="message-time">${time}</div>
+          </div>
+        `;
+        
+        chatMessages.appendChild(messageDiv);
+        scrollToBottom();
+        
+        // Adicionar event listeners aos quick replies
+        if (quickReplies) {
+          const replies = messageDiv.querySelectorAll('.quick-reply');
+          replies.forEach(reply => {
+            reply.addEventListener('click', function() {
+              addUserMessage(this.textContent);
+              processUserMessage(this.textContent);
+            });
+          });
+        }
+      }
+      
+      // Função para obter a hora atual formatada
+      function getCurrentTime() {
+        const now = new Date();
+        return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+      
+      // Função para rolar para o final do chat
+      function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    });
+  </script>
+
+  <style>
+    /* Estilos do chat (mantidos do exemplo anterior) */
+    body {
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      background-color: #1a1a1a;
+      color: #f5f8f7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background-color: #3d9073;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 25px;
+      align-items: center;
+    }
+
+    .container {
+      flex: 1;
+      padding: 25px;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .chat-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+
+    .chat-icon {
+      font-size: 40px;
+      color: #8be4ac;
+    }
+
+    .chat-header h1 {
+      color: #8be4ac;
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .chat-header p {
+      color: #aaa;
+      margin: 0;
+    }
+
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: #242424;
+      border-radius: 15px;
+      overflow: hidden;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 25px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .message {
+      display: flex;
+      max-width: 80%;
+    }
+
+    .bot-message {
+      align-self: flex-start;
+    }
+
+    .user-message {
+      align-self: flex-end;
+    }
+
+    .message-avatar {
+      margin-right: 15px;
+    }
+
+    .message-avatar .material-icons {
+      font-size: 30px;
+      color: #8be4ac;
+    }
+
+    .message-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message-text {
+      padding: 15px;
+      border-radius: 15px;
+      line-height: 1.5;
+    }
+
+    .bot-message .message-text {
+      background-color: #333;
+      border-bottom-left-radius: 0;
+    }
+
+    .user-message .message-text {
+      background-color: #3d9073;
+      border-bottom-right-radius: 0;
+    }
+
+    .message-time {
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 5px;
+      align-self: flex-end;
+    }
+
+    .quick-replies {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .quick-reply {
+      background-color: rgba(139, 228, 172, 0.2);
+      color: #8be4ac;
+      border: none;
+      border-radius: 15px;
+      padding: 8px 15px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .quick-reply:hover {
+      background-color: rgba(139, 228, 172, 0.3);
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 15px;
+      background-color: #333;
+      border-top: 1px solid #444;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 25px;
+      background-color: #1e1e1e;
+      color: #f5f8f7;
+      outline: none;
+    }
+
+    .send-btn {
+      background-color: #8be4ac;
+      color: #1a1a1a;
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      margin-left: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      .message {
+        max-width: 90%;
+      }
+      
+      .chat-messages {
+        padding: 15px;
+      }
+    }
+  </style>
+</body>
+</html>

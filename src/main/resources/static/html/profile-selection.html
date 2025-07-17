@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuário - Charles²</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* profile-selection.css adaptado para o formulário */
+        body {
+            background-color: #121212;
+            color: #f5f8f7;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .registration-container {
+            width: 90%;
+            max-width: 1400px;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #8be4ac;
+            margin-bottom: 15px;
+        }
+
+        .header h2 {
+            font-size: 2rem;
+            color: #8be4ac;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #aaa;
+        }
+
+        .form-section {
+            background-color: #1e1e1e;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        /* Adiciona espaçamento adicional entre grupos de campos */
+        .form-row.spaced {
+            margin-bottom: 50px;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #8be4ac;
+            font-size: 1.0rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 15px;
+            background-color: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #f5f8f7;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            border-color: #8be4ac;
+            outline: none;
+        }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .profile-card {
+            background-color: #1e1e1e;
+            border-radius: 15px;
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-top: 5px solid;
+            cursor: pointer;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-card.selected {
+            background-color: #252525;
+            box-shadow: 0 0 0 2px #8be4ac;
+        }
+
+        .profile-card[data-profile="owner"] {
+            border-color: #ff5722;
+        }
+
+        .profile-card[data-profile="admin"] {
+            border-color: #55f321;
+        }
+
+        .profile-card[data-profile="supporter"] {
+            border-color: #216af3;
+        }
+
+        .profile-card[data-profile="collaborator"] {
+            border-color: #f3d021;
+        }
+
+        .profile-card[data-profile="superior"] {
+            border-color: #4caf50;
+        }
+
+        .profile-card[data-profile="user"] {
+            border-color: #9c27b0;
+        }
+
+        .card-icon {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon .material-icons {
+            font-size: 60px;
+            color: #8be4ac;
+        }
+
+        .profile-card h2 {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #f5f8f7;
+        }
+
+        .features-list {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+
+        .features-list li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+            color: #ddd;
+        }
+
+        .features-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #8be4ac;
+        }
+
+        .select-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: #8be4ac;
+            color: #121212;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .select-btn:hover {
+            background-color: #6bcb9d;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 40px auto 0;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: #8be4ac;
+            color: #121212;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #6bcb9d;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(139, 228, 172, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .profiles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .form-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="registration-container">
+    <div class="header">
+        <h1>Adicionar Participante</h1>
+        <p>Preencha seus dados e selecione o perfil adequado</p>
+    </div>
+
+    <form id="registrationForm" class="form-section">
+        <div class="form-row spaced">
+            <div class="form-group">
+                <label for="firstName">Nome</label>
+                <input type="text" id="firstName" name="firstName" required aria-label="Nome">
+            </div>
+            <div class="form-group">
+                <label for="lastName">Sobrenome</label>
+                <input type="text" id="lastName" name="lastName" required aria-label="Sobrenome">
+            </div>
+        </div>
+
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email"
+                       aria-label="Email">
+            </div>
+        </div>
+
+        <div class="form-row spaced">
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required minlength="8">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirmar Senha</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+        </div>
+
+        <div class="header">
+            <h2>Selecione seu Perfil</h2>
+            <p>Escolha o perfil que melhor corresponde à função no sistema</p>
+        </div>
+
+        <div class="profiles-grid">
+
+            <!-- Card Admin -->
+            <div class="profile-card" data-profile="admin">
+                <div class="card-icon">
+                    <span class="material-icons">admin_panel_settings</span>
+                </div>
+                <h2>Administrador</h2>
+                <ul class="features-list">
+                    <li>Gerenciamento de chamados</li>
+                    <li>Relatórios completos</li>
+                    <li>Configurações de equipe</li>
+                    <li>Acesso a todos os tickets</li>
+                </ul>
+                <button type="button" class="select-btn">Selecionar</button>
+            </div>
+
+            <!-- Card Superior -->
+            <div class="profile-card" data-profile="supporter">
+                <div class="card-icon">
+                    <span class="material-icons">support_agent</span>
+                </div>
+                <h2>Supporter</h2>
+                <ul class="features-list">
+                    <li>Atendimento de chamados</li>
+                    <li>Transferência de tickets</li>
+                    <li>Comunicação com usuários</li>
+                    <li>Relatórios de atendimento</li>
+                </ul>
+                <button type="button" class="select-btn">Selecionar</button>
+            </div>
+
+            <!-- Card User -->
+            <div class="profile-card" data-profile="collaborator">
+                <div class="card-icon">
+                    <span class="material-icons">person</span>
+                </div>
+                <h2>Collaborator</h2>
+                <ul class="features-list">
+                    <li>Abertura de chamados</li>
+                    <li>Acompanhamento de tickets</li>
+                    <li>Comunicação com suporte</li>
+                    <li>Histórico de solicitações</li>
+                </ul>
+                <button type="button" class="select-btn" aria-label="Selecionar perfil">Selecionar</button>
+            </div>
+        </div>
+
+        <input type="hidden" id="selectedProfile" name="selectedProfile" value="" required
+               aria-label="Perfil selecionado">
+
+        <button type="submit" class="submit-btn">Cadastrar</button>
+    </form>
+
+    <div class="footer">
+        <p>Esta seleção só será exibida no primeiro acesso. Para alterar posteriormente, contate o Owner do sistema.</p>
+    </div>
+    <script>
+        const profileCards = document.querySelectorAll('.profile-card');
+        const selectedProfileInput = document.getElementById('selectedProfile');
+
+        // Seleção de perfil
+        profileCards.forEach(card => {
+            const selectBtn = card.querySelector('.select-btn');
+
+            card.addEventListener('click', function(e) {
+                // Evita conflito com o clique no botão
+                if (e.target !== selectBtn) {
+                    selectBtn.click();
+                }
+            });
+
+            selectBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+
+                // Remove a seleção de todos os cards
+                profileCards.forEach(c => c.classList.remove('selected'));
+
+                // Adiciona a seleção ao card clicado
+                card.classList.add('selected');
+
+                // Atualiza o valor do input hidden
+                selectedProfileInput.value = card.getAttribute('data-profile');
+            });
+        });
+    </script>
+    <script type="module" src="../javascript/main-profile-selection.js"></script>
+</div>
+</body>
+</html>

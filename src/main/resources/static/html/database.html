@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charles² - Banco de Dados</title>
+    <link rel="stylesheet" href="../css/database.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+<header class="header">
+    <div class="header-left">
+        <a href="Home.html" style="color: white; text-decoration: none; display: flex; align-items: center;">
+            <span class="material-icons">arrow_back</span>Voltar
+        </a>
+    </div>
+    <div class="header-right">
+        <div class="search-box">
+            <span class="material-icons">search</span>
+            <input type="text" id="searchInput" placeholder="Pesquisar usuários...">
+        </div>
+        <span class="material-icons" id="refreshBtn">refresh</span>
+    </div>
+</header>
+
+<div class="container">
+    <main class="main-content">
+        <div class="database-header">
+            <h1>Banco de Dados de Usuários</h1>
+            <button class="btn add-user">
+                <a href="profile-selection.html" style="color: white; text-decoration: none; display: flex; align-items: center;">
+                    <span class="material-icons">person_add</span> Adicionar Usuário
+                </a>
+            </button>
+        </div>
+
+        <div class="database-table-container">
+            <table class="database-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Perfil</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+                <tbody id="participantsTableBody">
+                <!-- Preenchido dinamicamente -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<script type="module" src="../javascript/main-database.js"></script>
+</body>
+</html>

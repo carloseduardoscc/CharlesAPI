@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Charles² - Perfil</title>
+  <link rel="stylesheet" href="../css/profile.css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+</head>
+<body>
+<header class="header">
+  <div class="header-left">
+    <a href="Home.html" style="color: white; text-decoration: none; display: flex; align-items: center;">
+      <span class="material-icons">arrow_back</span>Voltar
+    </a>
+  </div>
+  <div class="header-right">
+    <span class="material-icons">edit</span>
+  </div>
+</header>
+
+<div class="container">
+  <main class="main-content">
+    <section class="profile-section">
+      <div class="profile-header">
+        <div class="avatar">
+          <span class="material-icons">account_circle</span>
+        </div>
+        <h2 id="profile-name">...</h2>
+        <p id="profile-email">...</p>
+      </div>
+
+      <div class="profile-details">
+        <div class="detail-item">
+          <span class="material-icons">badge</span>
+          <div>
+            <h3>Nome Completo</h3>
+            <p id="full-name">...</p>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <span class="material-icons">phone</span>
+          <div>
+            <h3>Telefone</h3>
+            <p id="phone">Não informado</p>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <span class="material-icons">business</span>
+          <div>
+            <h3>Departamento</h3>
+            <p id="department">Não informado</p>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <span class="material-icons">calendar_today</span>
+          <div>
+            <h3>Data de Cadastro</h3>
+            <p id="created-at">...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <button class="btn" id="change-password">Alterar Senha</button>
+        <button class="btn secondary-btn" id="logout-btn">Sair da Conta</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Modal de erro -->
+<div id="errorModal" class="modal-overlay" style="display: none;">
+  <div class="modal-box">
+    <h2 style="color: #ef5350;">Erro!</h2>
+    <p id="errorTitle" style="font-weight: bold; margin-bottom: 10px;"></p>
+    <p id="errorMessage"></p>
+    <div class="modal-actions">
+      <button id="closeErrorModal" class="modal-btn cancel">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="../javascript/main-profile.js"></script>
+</body>
+</html>

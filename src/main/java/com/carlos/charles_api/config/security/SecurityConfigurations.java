@@ -46,7 +46,7 @@ public class SecurityConfigurations {
                     }))
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .authorizeHttpRequests(authorize -> authorize
-                            .requestMatchers("/", "/Login.html", "/tickets-and-transfer.html", "/index.html", "/Home.html", "/call-details.html","/Cadastro.html", "/css/**", "/Images/**", "/javascript/**").permitAll()
+                            .requestMatchers("/css/**", "/html/**", "/images/**", "/javascript/**","/favicon.ico", "/index.html", "/").permitAll()
                             .requestMatchers("/h2-console/**").permitAll()
                             .requestMatchers("/auth/login").permitAll()
                             .requestMatchers("/auth/register").permitAll()

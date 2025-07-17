@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selecione seu Perfil</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 2rem;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            color: #555;
+        }
+        
+        .profiles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .profile-card.owner {
+            border: 2px solid #1890ff;
+        }
+        
+        .profile-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .feature-item::before {
+            content: "✓";
+            color: #52c41a;
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .select-btn {
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            background: #f0f0f0;
+            color: #333;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .select-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .owner .select-btn {
+            background: #1890ff;
+            color: white;
+        }
+        
+        .owner .select-btn:hover {
+            background: #1482e6;
+        }
+        
+        .footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #777;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .profiles-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Selecione seu Perfil</h1>
+        <p class="subtitle">Escolha o perfil que melhor corresponde à sua função no sistema</p>
+        
+        <div class="profiles-container">
+            <!-- Card Owner -->
+            <div class="profile-card owner">
+                <h2 class="profile-title">Owner</h2>
+                <ul class="feature-list">
+                    <li class="feature-item">Acesso completo ao sistema</li>
+                    <li class="feature-item">Gerenciamento de usuários</li>
+                    <li class="feature-item">Configurações globais</li>
+                    <li class="feature-item">Banco de dados</li>
+                    <li class="feature-item">Relatórios avançados</li>
+                    <li class="feature-item">Suporte prioritário</li>
+                    <li class="feature-item">Suporte 24/7</li>
+                    <li class="feature-item">Gerenciamento de chamados</li>
+                    <li class="feature-item">Acesso a todos os tickets</li>
+                    <li class="feature-item">Configurações de equipe</li>
+                </ul>
+                <button class="select-btn">Selecionar</button>
+            </div>
+            
+            <!-- Card Administrador -->
+            <div class="profile-card">
+                <h2 class="profile-title">Administrador</h2>
+                <ul class="feature-list">
+                    <li class="feature-item">Gerenciamento de chamados</li>
+                    <li class="feature-item">Relatórios completos</li>
+                    <li class="feature-item">Configurações de equipe</li>
+                    <li class="feature-item">Acesso a todos os tickets</li>
+                </ul>
+                <button class="select-btn">Selecionar</button>
+            </div>
+            
+            <!-- Card Superior -->
+            <div class="profile-card">
+                <h2 class="profile-title">Superior</h2>
+                <ul class="feature-list">
+                    <li class="feature-item">Atendimento de chamados</li>
+                    <li class="feature-item">Transferência de tickets</li>
+                    <li class="feature-item">Comunicação com usuários</li>
+                    <li class="feature-item">Relatórios de atendimento</li>
+                </ul>
+                <button class="select-btn">Selecionar</button>
+            </div>
+            
+            <!-- Card Usuário -->
+            <div class="profile-card">
+                <h2 class="profile-title">Usuário</h2>
+                <ul class="feature-list">
+                    <li class="feature-item">Abertura de chamados</li>
+                    <li class="feature-item">Acompanhamento de tickets</li>
+                    <li class="feature-item">Comunicação com suporte</li>
+                    <li class="feature-item">Histórico de solicitações</li>
+                </ul>
+                <button class="select-btn">Selecionar</button>
+            </div>
+        </div>
+        
+        <p class="footer">
+            Esta seleção só será exibida no primeiro acesso. Para alterar posteriormente, contate o Owner do sistema.
+        </p>
+    </div>
+    
+    <script>
+        // Adicionando funcionalidade aos botões
+        document.querySelectorAll('.select-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const profileTitle = this.parentElement.querySelector('.profile-title').textContent;
+                alert(`Perfil selecionado: ${profileTitle}`);
+                // Aqui você pode adicionar a lógica de redirecionamento ou armazenamento
+            });
+        });
+    </script>
+</body>
+</html>

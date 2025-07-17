@@ -1,0 +1,137 @@
+/* profile-selection.css */
+body {
+  background-color: #121212;
+  color: #f5f8f7;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.profile-selection-container {
+  width: 90%;
+  max-width: 1400px;
+  padding: 40px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  color: #8be4ac;
+  margin-bottom: 15px;
+}
+
+.header p {
+  font-size: 1.1rem;
+  color: #aaa;
+}
+
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.profile-card {
+  background-color: #1e1e1e;
+  border-radius: 15px;
+  padding: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border-top: 5px solid;
+}
+
+.profile-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.profile-card.owner {
+  border-color: #ff5722;
+}
+
+.profile-card.admin {
+  border-color: #2196f3;
+}
+
+.profile-card.supporter {
+  border-color: #4caf50;
+}
+
+.profile-card.user {
+  border-color: #9c27b0;
+}
+
+.card-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+  color: #8be4ac;
+}
+
+.profile-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #f5f8f7;
+}
+
+.features-list {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.features-list li {
+  padding: 8px 0;
+  position: relative;
+  padding-left: 25px;
+}
+
+.features-list li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #8be4ac;
+}
+
+.select-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: #8be4ac;
+  color: #121212;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.select-btn:hover {
+  background-color: #6bcb9d;
+}
+
+.footer {
+  text-align: center;
+  color: #777;
+  font-size: 0.9rem;
+  margin-top: 40px;
+}
+
+@media (max-width: 768px) {
+  .profiles-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+}

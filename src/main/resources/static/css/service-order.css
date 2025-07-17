@@ -1,0 +1,359 @@
+/* Lista de Chamados Abertos - Cores Padrão */
+body {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: #1a1a1a;
+    color: #f5f8f7;
+    margin: 0;
+    min-height: 100vh;
+}
+
+.header {
+    background-color: #3d9073;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 25px;
+    align-items: center;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    gap: 8px;
+    transition: opacity 0.3s;
+}
+
+.back-button:hover {
+    opacity: 0.8;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 8px 15px;
+}
+
+.search-bar input {
+    background: transparent;
+    border: none;
+    color: white;
+    margin-left: 10px;
+    outline: none;
+    width: 200px;
+}
+
+.search-bar input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.search-controls {
+    margin-left: 15px;
+    cursor: pointer;
+    color: #8be4ac;
+    transition: color 0.3s;
+}
+
+.search-controls:hover {
+    color: white;
+}
+
+.content {
+    padding: 25px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.page-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.page-title h1 {
+    color: #8be4ac;
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.add-button {
+    background-color: #8be4ac;
+    color: #1a1a1a;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.add-button:hover {
+    background-color: #6bcb9d;
+}
+
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.show-entries {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #aaa;
+}
+
+.show-entries select {
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #333;
+    color: #f5f8f7;
+    border: 1px solid #555;
+}
+
+.export-button {
+    background-color: #333;
+    color: #f5f8f7;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.export-button:hover {
+    background-color: #444;
+}
+
+.database-table-container {
+    overflow-x: auto;
+    margin-bottom: 20px;
+    background-color: #242424;
+    border-radius: 10px;
+    padding: 1px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #3d9073;
+    color: white;
+    padding: 15px;
+    text-align: left;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #333;
+    background-color: #242424;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background-color: #2a2a2a;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.status-badge.aberto {
+    background-color: rgba(139, 228, 172, 0.2);
+    color: #8be4ac;
+}
+
+.status-badge.andamento {
+    background-color: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+}
+
+.status-badge.finalizado {
+    background-color: rgba(66, 165, 245, 0.2);
+    color: #42a5f5;
+}
+
+.status-badge.cancelado {
+    background-color: rgba(239, 83, 80, 0.2);
+    color: #ef5350;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.actions .material-icons {
+    cursor: pointer;
+    color: #8be4ac;
+    transition: color 0.3s;
+}
+
+.actions .material-icons:hover {
+    color: white;
+}
+
+/* Paginação */
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-top: 20px;
+}
+
+.pagination-button {
+    background-color: #333;
+    color: #f5f8f7;
+    border: none;
+    border-radius: 5px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagination-button.active {
+    background-color: #8be4ac;
+    color: #1a1a1a;
+}
+
+.pagination-button:hover:not(.active) {
+    background-color: #444;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .search-bar {
+        width: 100%;
+    }
+    
+    .search-bar input {
+        width: 100%;
+    }
+    
+    .page-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .controls-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-box {
+    background-color: #2a2a2a;
+    color: #f5f8f7;
+    border-radius: 10px;
+    padding: 25px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.7);
+    text-align: left;
+}
+
+.modal-box h2 {
+    margin-top: 0;
+    color: #8be4ac;
+    font-size: 1.4rem;
+}
+
+.modal-box p {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
+
+.modal-box textarea {
+    width: 100%;
+    background-color: #1a1a1a;
+    color: #f5f8f7;
+    border: 1px solid #555;
+    border-radius: 5px;
+    padding: 10px;
+    resize: none;
+    font-family: inherit;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-btn.cancel {
+    background-color: #444;
+    color: #f5f8f7;
+}
+
+.modal-btn.cancel:hover {
+    background-color: #555;
+}
+
+.modal-btn.confirm {
+    background-color: #8be4ac;
+    color: #1a1a1a;
+}
+
+.modal-btn.confirm:hover {
+    background-color: #6bcb9d;
+}

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charles² - Detalhes do Chamado</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Estilo consistente com o sistema */
+        body {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            background-color: #1a1a1a;
+            color: #f5f8f7;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #3d9073;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 25px;
+            align-items: center;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            gap: 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-actions .material-icons {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .header-actions .material-icons:hover {
+            transform: scale(1.1);
+        }
+
+        .content {
+            padding: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .ticket-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ticket-id {
+            font-size: 1.8rem;
+            color: #8be4ac;
+            margin: 0;
+        }
+
+        .ticket-subject {
+            font-size: 1.4rem;
+            margin: 5px 0 0 0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .status-badge.open {
+            background-color: rgba(139, 228, 172, 0.2);
+            color: #8be4ac;
+        }
+
+        .status-badge.in-progress {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .status-badge.closed {
+            background-color: rgba(66, 165, 245, 0.2);
+            color: #42a5f5;
+        }
+
+        .status-badge.cancelled {
+            background-color: rgba(239, 83, 80, 0.2);
+            color: #ef5350;
+        }
+
+        .ticket-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .primary-btn {
+            background-color: #8be4ac;
+            color: #1a1a1a;
+        }
+
+        .secondary-btn {
+            background-color: #333;
+            color: #f5f8f7;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .ticket-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .ticket-details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-card {
+            background-color: #242424;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .detail-card h3 {
+            color: #8be4ac;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .detail-label {
+            width: 150px;
+            color: #aaa;
+            font-weight: bold;
+        }
+
+        .detail-value {
+            flex: 1;
+        }
+
+        .description-card {
+            background-color: #242424;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .description-text {
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .attachments-container {
+            background-color: #242424;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .attachments-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            width: calc(50% - 20px);
+            text-decoration: none;
+            color: #f5f8f7;
+            transition: background-color 0.2s;
+        }
+
+        .attachment-item:hover {
+            background-color: #3d3d3d;
+        }
+
+        .attachment-icon {
+            font-size: 2rem;
+            color: #8be4ac;
+        }
+
+        .attachment-info {
+            flex: 1;
+        }
+
+        .attachment-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .attachment-size {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .history-container {
+            background-color: #242424;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .history-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #3d9073;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .history-content {
+            flex: 1;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .history-user {
+            font-weight: bold;
+        }
+
+        .history-date {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .history-action {
+            color: #8be4ac;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .history-comment {
+            color: #ddd;
+            line-height: 1.5;
+        }
+
+        .comment-form {
+            margin-top: 30px;
+        }
+
+        .comment-textarea {
+            width: 100%;
+            padding: 15px;
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: #f5f8f7;
+            font-family: inherit;
+            margin-bottom: 15px;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .comment-submit {
+            background-color: #8be4ac;
+            color: #1a1a1a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .comment-submit:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <a href="service-order.html" class="back-button">
+        <span class="material-icons">arrow_back</span>
+        <span>Voltar para lista</span>
+    </a>
+    <div class="header-actions">
+        <span class="material-icons" title="Imprimir">print</span>
+        <span class="material-icons" title="Exportar">download</span>
+        <span class="material-icons" title="Compartilhar">share</span>
+    </div>
+</header>
+
+<div class="content">
+    <div class="ticket-header">
+        <div class="ticket-title">
+            <div>
+                <h1 class="ticket-id">OS-2024-015</h1>
+                <h2 class="ticket-subject">Problema com acesso ao sistema financeiro</h2>
+                <span class="status-badge in-progress">Em Andamento</span>
+            </div>
+        </div>
+        <div class="ticket-actions">
+            <button class="action-btn primary-btn">
+                <span class="material-icons">play_circle</span>
+                <span>Atender</span>
+            </button>
+            <button class="action-btn secondary-btn">
+                <span class="material-icons">transfer_within_a_station</span>
+                <span>Transferir</span>
+            </button>
+            <button class="action-btn secondary-btn">
+                <span class="material-icons">edit</span>
+                <span>Editar</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="ticket-details-grid">
+        <div class="detail-card">
+            <h3>Informações Básicas</h3>
+            <div class="detail-row">
+                <div class="detail-label">Aberto por:</div>
+                <div class="detail-value">Maria Oliveira (Financeiro)</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Responsável:</div>
+                <div class="detail-value">Carlos Eduardo da Silva</div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Data de abertura:</div>
+                <div class="detail-value">15/11/2023 14:30</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Última atualização:</div>
+                <div class="detail-value">18/11/2023 09:15</div>
+            </div>
+        </div>
+
+        <div class="detail-card">
+            <h3>Detalhes do Chamado</h3>
+
+            <div class="detail-row">
+                <div class="detail-label">Tempo decorrido:</div>
+                <div class="detail-value">2 dias 18 horas</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="description-card">
+        <h3>Descrição do Chamado</h3>
+        <div class="description-text">
+            Ao tentar acessar o módulo de relatórios do sistema financeiro, recebo a mensagem de erro:
+            "Acesso negado - Permissões insuficientes".
+
+            Isso começou a acontecer após a atualização do sistema na última sexta-feira (10/11).
+            Antes conseguia acessar normalmente todos os relatórios.
+
+            Já tentei:
+            - Fazer logout e login novamente
+            - Limpar cache do navegador
+            - Acessar de outro computador
+
+            Nada resolveu. Preciso urgentemente acessar os relatórios para fechar o mês.
+        </div>
+    </div>
+
+
+
+    <div class="history-container">
+        <h3>Histórico do Chamado</h3>
+
+        <div class="history-item">
+            <div class="history-avatar">
+                <span class="material-icons">person</span>
+            </div>
+            <div class="history-content">
+                <div class="history-header">
+                    <span class="history-user">Maria Oliveira</span>
+                    <span class="history-date">15/11/2023 14:30</span>
+                </div>
+                <div class="history-action">Chamado aberto</div>
+                <div class="history-comment">Solicitação inicial</div>
+            </div>
+        </div>
+
+        <div class="history-item">
+            <div class="history-avatar">
+                <span class="material-icons">support_agent</span>
+            </div>
+            <div class="history-content">
+                <div class="history-header">
+                    <span class="history-user">Carlos Eduardo</span>
+                    <span class="history-date">15/11/2023 15:45</span>
+                </div>
+                <div class="history-action">Status alterado para "Em Análise"</div>
+                <div class="history-comment">Verificando com o time de infraestrutura as permissões do usuário</div>
+            </div>
+        </div>
+
+        <div class="history-item">
+            <div class="history-avatar">
+                <span class="material-icons">support_agent</span>
+            </div>
+            <div class="history-content">
+                <div class="history-header">
+                    <span class="history-user">Carlos Eduardo</span>
+                    <span class="history-date">16/11/2023 09:15</span>
+                </div>
+                <div class="history-action">Status alterado para "Em Andamento"</div>
+                <div class="history-comment">Identificado problema nas permissões de grupo. Encaminhado para correção.</div>
+            </div>
+        </div>
+
+        <div class="history-item">
+            <div class="history-avatar">
+                <span class="material-icons">person</span>
+            </div>
+            <div class="history-content">
+                <div class="history-header">
+                    <span class="history-user">Maria Oliveira</span>
+                    <span class="history-date">17/11/2023 11:20</span>
+                </div>
+                <div class="history-action">Comentário adicionado</div>
+                <div class="history-comment">Alguma previsão para resolução? Preciso urgentemente acessar esses relatórios.</div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    // Simulação de dados - na prática viria de uma API
+    document.addEventListener('DOMContentLoaded', function() {
+        // Pegar ID do chamado da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const ticketId = urlParams.get('id') || 'OS-2024-015';
+
+        // Atualizar título da página
+        document.title = `Charles² - ${ticketId}`;
+
+        // Aqui você faria uma requisição para buscar os dados do chamado
+        // fetch(`/api/tickets/${ticketId}`)
+        //   .then(response => response.json())
+        //   .then(data => populateTicketData(data));
+
+        // Simular clique nos botões de ação
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.querySelector('span:last-child').textContent.trim();
+                alert(`Ação "${action}" seria executada no chamado ${ticketId}`);
+            });
+        });
+
+        // Formulário de comentário
+        document.querySelector('.comment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const comment = this.querySelector('textarea').value;
+            if (comment.trim() === '') return;
+
+            alert(`Comentário "${comment}" seria enviado para o chamado ${ticketId}`);
+            this.querySelector('textarea').value = '';
+        });
+    });
+
+    // Função para popular os dados (simulação)
+    function populateTicketData(data) {
+        // Implementação real buscaria os dados do backend
+        console.log('Dados do chamado:', data);
+    }
+</script>
+</body>
+</html>

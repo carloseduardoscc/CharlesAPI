@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Charles² - Relatórios</title>
+  <link rel="stylesheet" href="../css/reports.css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+</head>
+<body>
+<header class="header">
+  <div class="header-left">
+    <a href="Home.html" style="color: white; text-decoration: none; display: flex; align-items: center;">
+      <span class="material-icons">arrow_back</span>Voltar
+    </a>
+  </div>
+</header>
+
+<div class="container">
+  <main class="main-content">
+    <h1>Relatórios</h1>
+
+    <div class="filters">
+      <div class="filter-group">
+        <label for="report-type">Tipo de Relatório</label>
+        <select id="report-type">
+          <option value="ALL">Todos os Chamados</option>
+          <option value="BY_STATE">Chamados por Status</option>
+          <option value="BY_ASSIGNEE">Chamados por Responsável</option>
+          <option value="BY_SOLICITANT">Chamados por Solicitante</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="date-from">De</label>
+        <input type="date" id="date-from">
+      </div>
+
+      <div class="filter-group">
+        <label for="date-to">Até</label>
+        <input type="date" id="date-to">
+      </div>
+
+      <button class="btn" id="generate-btn">Gerar Relatório</button>
+    </div>
+
+    <div class="report-container">
+      <div class="report-header">
+        <h2>Relatório de Chamados</h2>
+        <p id="report-period">Período selecionado</p>
+      </div>
+
+      <div class="report-summary" id="report-summary">
+        <!-- Dados de estatísticas vêm aqui -->
+      </div>
+
+      <div class="chart-placeholder">
+        <span class="material-icons">bar_chart</span>
+        <p>Gráfico do relatório será exibido aqui</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal de erro -->
+<div id="errorModal" class="modal-overlay" style="display: none;">
+  <div class="modal-box">
+    <h2 style="color: #ef5350;">Erro!</h2>
+    <p id="errorTitle" style="font-weight: bold; margin-bottom: 10px;"></p>
+    <p id="errorMessage"></p>
+    <div class="modal-actions">
+      <button id="closeErrorModal" class="modal-btn cancel">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="../javascript/main-reports.js"></script>
+</body>
+</html>
