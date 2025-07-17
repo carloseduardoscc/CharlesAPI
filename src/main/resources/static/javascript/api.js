@@ -1,13 +1,16 @@
 import { getToken } from './auth.js';
 
-let BASE_URL = "http://localhost:8080"; // inicial
-const FALLBACK_URL = "https://api.seusite.com"; // seu backend fixo de produção
+let BASE_URL = "http://localhost"; // inicial
+const FALLBACK_URL = "https://charlesapi-production.up.railway.app"; // seu backend fixo de produção
 let alreadySwitched = false;
 
 async function tryBaseUrl(url) {
   try {
-    const res = await fetch(url + "/health", { method: "GET" }); // você pode usar "/" ou outro endpoint leve
-    return res.ok;
+    const res = await fetch(url + '/auth/login', {
+      method: 'OPTIONS',
+      mode: 'cors'
+    });
+    return res.ok || res.status === 204; // geralmente retorna 204 No Content
   } catch (e) {
     return false;
   }
@@ -17,7 +20,7 @@ async function tryBaseUrl(url) {
 (async () => {
   const ok = await tryBaseUrl(BASE_URL);
   if (!ok) {
-    console.warn("localhost:8080 não está acessível, usando fallback.");
+    console.warn("localhost:80 não está acessível, usando fallback.");
     BASE_URL = FALLBACK_URL;
     alreadySwitched = true;
   }
