@@ -1,49 +1,43 @@
 package com.carlos.charles_api.controller;
 
-import com.carlos.charles_api.model.User;
-import com.carlos.charles_api.model.dto.AuthenticationDTO;
-import com.carlos.charles_api.model.dto.LoginResponseDTO;
-import com.carlos.charles_api.model.dto.RegisterDTO;
-import com.carlos.charles_api.repository.UserRepository;
-import com.carlos.charles_api.security.TokenService;
+import com.carlos.charles_api.dto.request.AuthenticationRequestDTO;
+import com.carlos.charles_api.dto.response.LoginResponseDTO;
+import com.carlos.charles_api.dto.request.RegisterRequestDTO;
+import com.carlos.charles_api.dto.response.UserInfoDTO;
+import com.carlos.charles_api.model.entity.User;
 import com.carlos.charles_api.service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private TokenService tokenService;
+
     @Autowired
     private AuthenticationService service;
 
-    //todo extrair lógica do login para service
+    //faz login e entrega o JWT
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
-
-        var token = tokenService.generateToken((User) auth.getPrincipal());
-
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+    public ResponseEntity login(@RequestBody @Valid AuthenticationRequestDTO data) {
+        LoginResponseDTO response = service.login(data);
+        return ResponseEntity.ok(response);
     }
 
+    //cria um usuário owner com seu workspace
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody @Valid RegisterDTO registerDTO){
+    public ResponseEntity register(@RequestBody @Valid RegisterRequestDTO registerDTO) {
         service.register(registerDTO);
-        return ResponseEntity.ok("{}");
+        LoginResponseDTO login = service.login(new AuthenticationRequestDTO(registerDTO.email(), registerDTO.password()));
+        return ResponseEntity.ok(login);
+    }
+
+    //informa dados do usuário autenticado
+    @GetMapping("/me")
+    public ResponseEntity<UserInfoDTO> me() {
+        UserInfoDTO userInfo = service.me();
+        return ResponseEntity.ok(userInfo);
     }
 
 

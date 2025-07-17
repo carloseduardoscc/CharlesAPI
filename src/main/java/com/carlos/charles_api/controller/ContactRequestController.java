@@ -1,6 +1,6 @@
 package com.carlos.charles_api.controller;
 
-import com.carlos.charles_api.model.dto.ContactRequestDTO;
+import com.carlos.charles_api.dto.request.ContactRequestDTO;
 import com.carlos.charles_api.service.ContactRequestService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ public class ContactRequestController {
 
     private final ContactRequestService service;
 
-    @PostMapping("/send")
+    @PostMapping
     public ResponseEntity<ContactRequestDTO> sendEmail(@Valid @RequestBody ContactRequestDTO requestBody){
         service.send(requestBody);
         return ResponseEntity.ok(requestBody);

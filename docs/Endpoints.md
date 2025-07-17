@@ -10,6 +10,21 @@
 - [/auth](#auth)
   - [POST /auth/register](#1-authregister)
   - [POST /auth/login](#2-authlogin)
+  - [POST /auth/me](#3-authme)
+- [/serviceorder](#serviceorder)
+  - [POST /serviceorder](#1-serviceorder)
+  - [GET /serviceorder](#2-serviceorder)
+  - [GET /serviceorder/{id}](#3-serviceorderid)
+  - [POST /serviceorder/{id}/report](#4-serviceorderidreport)
+  - [POST /serviceorder/{id}/assign](#5-serviceorderidassign)
+  - [POST /serviceorder/{id}/cancel](#6-serviceorderidcancel)
+  - [POST /serviceorder/{id}/complete](#7-serviceorderidcomplete)
+  - [POST /serviceorder/{id}/statistcs](#8-serviceorderstatistcs)
+- [/participants](#participants)
+  - [POST /participants](#1-participants)
+  - [GET /participants](#2-participants)
+  - [POST /participants/{id}/deactivate](#3-participantsiddeactivate)
+  - [POST /participants/{id}/activate](#4-participantsidactivate)
 
 ## /contactRequest
 
@@ -51,7 +66,8 @@ Endpoint para criação de um novo usuário, todos os dados são obrigatórios!
   "email":"joaosilva@gmail.com",
   "password":"123456789",
   "name":"João",
-  "lastName":"Silva"
+  "lastName":"Silva",
+  "workspaceName": "My workspace"
 }
 ```
 
@@ -78,3 +94,285 @@ Este endpoint recebe o login e senha, valida no banco de dados e retorna um toke
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6Ik..."
 }
 ```
+
+### 3. **/auth/me**
+
+#### Descrição:
+Endpoint para acessar detalhes do usuário autenticado pelo JWT
+#### Requisição:
+**URL**: `/auth/me`  
+**Método**: `GET`
+
+**Resposta**
+```json
+{
+  "id": 10,
+  "email": "collaborator3@example.com",
+  "name": "Collaborator3",
+  "lastname": "Name",
+  "role": "COLLABORATOR",
+  "workspaceId": 2,
+  "workspaceIdentification": "Workspace2"
+}
+```
+
+## /serviceorder
+
+### 1. **/serviceorder**
+
+#### Descrição:
+Endpoint para abrir ordens de serviço!
+
+#### Requisição:
+**URL**: `/serviceorder`  
+**Método**: `POST`
+
+**Body**:
+```json
+{
+  "description": "Meu monitor parou de funcionar!"
+}
+```
+
+### 2. **/serviceorder**
+
+#### Descrição:
+Endpoint para listar ordens de serviço com suporte para filtros de data máxima, mínima e responsável 'assignee'
+Obs.: Collaborators apenas podem ver OS que eles mesmos abriram
+
+#### Requisição:
+**URL**: `/serviceorder?maxDate=2025-07-06&minDate=2025-07-01&assignee=name`  
+**Método**: `GET`
+
+**Resposta**
+```json
+[
+  {
+    "id": 3,
+    "soCode": "CH-00005",
+    "description": "Interferência na rede",
+    "currentState": "CANCELED",
+    "collaboratorName": "Collaborator1 Name",
+    "collaboratorEmail": "collaborator1@example.com",
+    "supporterName": "Supporter1 Name",
+    "supporterEmail": "supporter1@example.com"
+  }
+]
+```
+
+### 3. **/serviceorder/{id}**
+
+#### Descrição:
+Endpoint para detalhar um ordem de serviço
+
+#### Requisição:
+**URL**: `/serviceorder/{id}`  
+**Método**: `GET`
+
+
+**Resposta**
+```json
+{
+  "id": 4,
+  "soCode": "CH-00004",
+  "description": "Impressora não funciona",
+  "diagnostic": "Usuário pediu para cancelar",
+  "assignee": {
+    "id": 6,
+    "email": "supporter2@example.com",
+    "name": "Supporter2",
+    "lastname": "Name",
+    "role": "SUPPORTER",
+    "workspaceId": 1,
+    "workspaceIdentification": "Workspace1"
+  },
+  "solicitant": {
+    "id": 10,
+    "email": "collaborator3@example.com",
+    "name": "Collaborator3",
+    "lastname": "Name",
+    "role": "COLLABORATOR",
+    "workspaceId": 2,
+    "workspaceIdentification": "Workspace2"
+  },
+  "states": [
+    {
+      "dateTime": "2025-06-24T13:17:27.037319",
+      "type": "OPEN"
+    },
+    {
+      "dateTime": "2025-06-25T13:17:27.037319",
+      "type": "ASSIGNED"
+    },
+    {
+      "dateTime": "2025-06-26T13:17:27.037319",
+      "type": "CANCELED"
+    }
+  ],
+  "currentState": "CANCELED"
+}
+```
+
+
+### 4. **/serviceorder/{id}/report**
+
+#### Descrição:
+Endpoint para fazer download do relatório em PDF
+
+#### Requisição:
+**URL**: `/serviceorder/{id}/report`  
+**Método**: `GET`
+
+### 4. **/serviceorder/report**
+
+#### Descrição:
+Endpoint para fazer download de um relatório de todas as OS do workspace, com filtros de data e tipo de relatório.
+Todos menos o collaborator podem ter acesso a esse recurso:
+reportType: ALL, BY_ASSIGNEE, BY_SOLICITANT, BY_STATE
+
+#### Requisição:
+**URL**: ` /serviceorder/report?reportType=ALL&minDate=2025-07-01&maxDate=2025-08-01`  
+**Método**: `GET`
+
+### 5. **/serviceorder/{id}/assign**
+
+#### Descrição:
+Endpoint para se responsabilizar numa ordem de serviço aberta
+
+#### Requisição:
+**URL**: `/serviceorder/{id}/assign`  
+**Método**: `POST`
+
+### 6. **/serviceorder/{id}/cancel**
+
+#### Descrição:
+Endpoint para cancelar uma os, permitido se:
+
+Usuário abriu a ordem e ela ainda está aberta, 
+
+Usuário se responsabilizou e ela ainda está em andamento
+
+#### Requisição:
+**URL**: `/serviceorder/{id}/cancel`  
+**Método**: `POST`
+
+### 7. **/serviceorder/{id}/complete**
+
+#### Descrição:
+Endpoint para completar uma os, permitido se:
+
+Usuário se responsabilizou e ela ainda está em andamento
+
+#### Requisição:
+**URL**: `/serviceorder/{id}/complete`  
+**Método**: `POST`
+
+**Body**:
+```json
+{
+  "diagnostic": "foi trocado a fonte"
+}
+```
+
+### 8. **/serviceorder/statistcs**
+
+#### Descrição:
+Endpoint para gerar estatísticas sobre as ordens de serviço com filtro de data
+
+#### Requisição:
+**URL**: `/serviceorder/statistcs?maxDate=2025-07-06&minDate=2025-07-01`  
+**Método**: `GET`
+
+**Resposta**
+```json
+{
+  "open": 0,
+  "assigned": 1,
+  "canceled": 1,
+  "completed": 1,
+  "closed": 2,
+  "all": 3
+}
+```
+
+## /participants
+
+### 1. **/participants**
+
+#### Descrição:
+Endpoint para adicionar um novo participante, permitido se:
+
+Owner pode adicionar admin, supporter e collaborator,
+
+Admin pode adicionar supporter e collaborator
+
+Outros cargos não podem adicionar participantes
+
+#### Requisição:
+**URL**: `/participants`  
+**Método**: `POST`
+
+**Body**:
+```json
+{
+  "name": "NewParticipant",
+  "lastName": "Test",
+  "email": "newparticipant3@gmail.com",
+  "password": "passwordtest123",
+  "role": "OWNER"
+}
+```
+
+**Resposta**
+```json
+{
+  "email": "newparticipant3@gmail.com",
+  "password": "passwordtest123"
+}
+```
+
+### 2. **/participants**
+
+#### Descrição:
+Endpoint para listar participants do próprio workspace
+
+#### Requisição:
+**URL**: `/participants`  
+**Método**: `GET`
+
+**Resposta**
+```json
+[
+  {
+    "id": 2,
+    "name": "Owner2 Name",
+    "email": "owner2@example.com",
+    "role": "OWNER",
+    "isActive": true
+  },
+  {
+    "id": 4,
+    "name": "Admin2 Name",
+    "email": "admin2@example.com",
+    "role": "ADMIN",
+    "isActive": true
+  }
+]
+```
+### 3. **/participants/{id}/deactivate**
+
+#### Descrição:
+Endpoint para desativar um participante
+
+#### Requisição:
+**URL**: `/participants/{id}/deactivate`  
+**Método**: `POST`
+
+### 4. **/participants/{id}/activate**
+
+#### Descrição:
+Endpoint para reativar um participante
+
+#### Requisição:
+**URL**: `/participants/{id}/activate`  
+**Método**: `POST`
